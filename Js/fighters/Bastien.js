@@ -1,26 +1,20 @@
 import { Fighter } from './Fighter.js';
 
 export class Bastien extends Fighter {
-    /*
-    handleKey(event) {
-        if (event.key === "ArrowLeft") {
-            this.animationFrame++;
-            console.log(this.animationFrame);
-        } else if (event.key === "ArrowRight") {
-            this.animationFrame--;
-            console.log(this.animationFrame);
-        } else if (event.key === "ArrowUp" && !this.jumping) {
-            this.jumping = true;
-            this.velocityY = this.jumpSpeed;
-            this.state = 'jump';
-        }
-    }*/
-
     constructor(x, y, velocity) {
         super('Bastien', x, y, velocity);
         this.image = document.body.querySelector('img[alt="bastien"]');
         this.frames = new Map();
-        this.state = "ki";
+        this.regardeDroite = true;
+        this.jumping = false;
+        this.velocityY = 0;
+        this.jumpSpeed = -5;
+        this.gravity = 0.25;
+        this.entryPlayed = false;
+        this.state = 'entry';
+        this.upPressed = false;
+        this.punchPressed = false;
+        this.downPressed = false;
 
         let walk = [
             [10, 174, 35, 64],
@@ -267,4 +261,142 @@ export class Bastien extends Fighter {
         this.animation = this.gen_AnimationObject("crouch_uppercut", "crouch_uppercut", 11);
         
     }
+
+    handleKey(event) {
+        switch (event.key) {
+            case "ArrowLeft":
+                this.moveLeft();
+                break;
+            case "ArrowRight":
+                this.moveRight();
+                break;
+            case " ":
+                this.jump();
+                break;
+            case "g":
+            case "G":
+                this.punch();
+                this.punchPressed = true;
+                this.checkUpKick();
+                this.checkLowKick();
+                break;
+            case "ArrowUp":
+                this.upPressed = true;
+                this.checkUpKick();
+                break;
+            case "h":
+            case "H":
+                this.hadoken();
+                break;
+            case "ArrowDown":
+                this.downPressed = true;
+                this.guard();
+                this.checkLowKick();
+                break;
+            case "k":
+            case "K":
+                this.ki();
+                break;
+
+        }
+    }
+
+    handleKeyup(event) {
+        switch (event.key) {
+            case "ArrowLeft":
+            case "ArrowRight":
+                this.stopMovement();
+                break;
+            case "g":
+            case "G":
+                this.punchPressed = false;
+                break;
+            case "ArrowUp":
+                this.upPressed = false;
+                break;
+            case "h":
+            case "H":
+                break;
+            case "ArrowDown":
+                this.downPressed = false;
+                this.stopGuard();
+                break;
+            case " ":
+                this.jump();
+                break;
+            case "k":
+            case "K":
+                this.ki();
+                break;
+        }
+    }
+
+    moveLeft() {
+        this.velocity = -100;
+        this.changeState('walk');
+        this.regardeDroite = false;
+    }
+
+    moveRight() {
+        this.velocity = 100;
+        this.changeState('walk');
+        this.regardeDroite = true;
+    }
+
+    jump() {
+        if (!this.jumping) {
+            this.jumping = true;
+            this.velocityY = this.jumpSpeed;
+            this.changeState('jump');
+        }
+    }
+
+    punch() {
+        this.isPunching = true;
+        this.changeState('punch');
+    }
+
+    hadoken() {
+        this.isHadoken = true;
+        this.changeState('hadoken');
+    }
+
+    stopMovement() {
+        this.velocity = 0;
+        if (!this.jumping) {
+            this.changeState('idle');
+        }
+    }
+    guard() {
+        this.changeState('guard');
+    }
+
+    stopGuard() {
+        this.changeState('idle');
+    }
+
+    upKick() {
+        this.changeState('up_kick');
+    }
+    checkUpKick() {
+        if (this.upPressed && this.punchPressed) {
+            this.upKick();
+        }
+    }
+
+    lowKick() {
+        this.changeState('low_kick');
+    }
+
+    checkLowKick() {
+        if (this.downPressed && this.punchPressed) {
+            this.lowKick();
+        }
+    }
+
+    ki() {
+        this.isKi = true;
+        this.changeState('ki');
+    }
+
 }
