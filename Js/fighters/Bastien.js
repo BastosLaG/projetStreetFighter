@@ -295,7 +295,6 @@ export class Bastien extends Fighter {
             case "K":
                 this.ki();
                 break;
-
         }
     }
 

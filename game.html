@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Univ-Fighter</title>
+        <style>
+            body {
+                margin: 0px; 
+                padding: 0px;
+            }
+            body, 
+            canvas {
+                background-color: black;
+            }
+            canvas {
+                width: 100%;
+                object-fit: contain;
+                image-rendering: crisp-edges;
+                image-rendering: pixelated;
+            }
+            img {
+                display: none;
+            }            
+        </style>
+        <script type="module" src="./Js/fighters/Fighter.js"></script>
+        <script type="module" src="./Js/prog.js"></script>
+    </head>
+    <body>
+        <canvas width="384" height="224"></canvas>
+        <img src=./assets/Background.png alt="background"  />
+        <img src=./assets/bastien_akuma/png/Bastien.png alt="bastien"  />
+        <img src=./assets/bastien_akuma/png/Bastien.png alt="ludovic"  />
+        <img src=./assets/bastien_akuma/png/Bastien.png alt="mehdi"  />
+        <img src=./assets/bastien_akuma/png/Bastien.png alt="tomas"  />
+    </body>
+</html>
