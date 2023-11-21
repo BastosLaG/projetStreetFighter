@@ -1,25 +1,28 @@
+
+var click = new Audio('./assets/sound/main_menu/dmc5_button.mp3');
+
 //////*  Start button   *//////
 document.getElementById('startButton').addEventListener('click', function () {
-    window.location.assign('game.html');
-    // mettre les sons de click
+    click.play(); // Jouer l'effet sonore
+    setTimeout(function() {
+        window.location.assign('game.html');
+    }, 590); // Retarder de 300 millisecondes (ajustez selon vos besoins)
 });
 
 //////*  Settings button   *//////
 document.getElementById('settingButton').addEventListener('click', function () {
-    // mettre liens vers settings.html
-    // mettre les sons de click
+    click.play(); // Jouer l'effet sonore
+    // Mettre liens vers settings.html
 });
-
 
 //////*  Credits button   *//////
 document.getElementById('creditButton').addEventListener('click', function () {
-    // mettre liens vers settings.html
-    // mettre les sons de click
+    click.play(); // Jouer l'effet sonore
+    // Mettre liens vers credits.html
 });
 
 //////*  About buttons   *//////
 document.addEventListener("DOMContentLoaded", function () {
-
     const menuButtons = document.querySelectorAll(".menuButton");
 
     menuButtons.forEach(function (button) {
@@ -39,28 +42,39 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    var introVideo = document.getElementById('intro');
+    if (introVideo) {
+        introVideo.onended = function() {
+            // Actions à effectuer après la fin de la vidéo
+            enableMenuInteraction(); // Réactiver les interactions du menu
+            introVideo.style.display = 'none'; // Cacher la vidéo
+        };
+    }
 
-// //////*  Disable menu interaction   *//////
-// function disableMenuInteraction() {
-//     var menuButtons = document.querySelectorAll(".menuButton");
-//     menuButtons.forEach(function (button) {
-//         button.classList.add("disable-interaction");
-//         button.style.opacity = "0";
-//     });
-// };
+    disableMenuInteraction(); // Désactiver les interactions du menu pendant la vidéo
+});
+//////*  Disable menu interaction   *//////
+function disableMenuInteraction() {
+    var menuButtons = document.querySelectorAll(".menuButton");
+    menuButtons.forEach(function (button) {
+        button.classList.add("disable-interaction");
+        button.style.opacity = "0";
+    });
+};
 
-// function enableMenuInteraction() {
-//     var menuButtons = document.querySelectorAll(".menuButton");
-//     menuButtons.forEach(function (button) {
-//         button.classList.remove("disable-interaction");
-//         button.style.opacity = "1";
-//     });
-// };
+function enableMenuInteraction() {
+    var menuButtons = document.querySelectorAll(".menuButton");
+    menuButtons.forEach(function (button) {
+        button.classList.remove("disable-interaction");
+        button.style.opacity = "1";
+    });
+};
 
-// disableMenuInteraction();
-// setTimeout(function () {
-//     enableMenuInteraction();
-// }, 4500);
+disableMenuInteraction();
+setTimeout(function () {
+    enableMenuInteraction();
+}, 21800);
 
 // //////*  Remove intro element   *//////
 // document.addEventListener('DOMContentLoaded', function() {
