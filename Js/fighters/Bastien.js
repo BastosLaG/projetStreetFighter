@@ -1,24 +1,34 @@
 import { Fighter } from './Fighter.js';
+import { FighterState, FighterDirection } from '../constants/dfight.js';
 
 var jumpsound = new Audio('./assets/sound/Bastien/DBZjumpSoundEffect.mp3');
 jumpsound.volume=0.4;
 export class Bastien extends Fighter {
-    constructor(x, y, velocity) {
-        super('Bastien', x, y, velocity);
+    constructor(x, y, direction) {
+        super('Bastien', x, y, direction);
+
         this.image = document.body.querySelector('img[alt="bastien"]');
         this.frames = new Map();
-        this.regardeDroite = true;
-        this.jumping = false;
-        this.velocityY = 0;
-        this.jumpSpeed = -5;
-        this.gravity = 0.25;
-        this.entryPlayed = false;
-        this.state = 'entry';
-        this.upPressed = false;
-        this.punchPressed = false;
-        this.downPressed = false;
+        this.initialVelocity = {
+            x: {
+                [FighterState.FORWARDWALK]: 200,
+                [FighterState.BACKWARDWALK]: -150,
+                [FighterState.JUMPFORWARD]: 170,
+                [FighterState.JUMPBACKWARD]: -200,
+            },
+            jump: -420,
+        }
+        this.gravity = 1000;
 
-        let walk = [
+        let forwardwalk = [
+            [10, 174, 35, 64],
+            [54, 171, 37, 67],
+            [100, 172, 35, 68],
+            [141, 172, 35, 68],
+            [180, 172, 35, 68],
+            [219, 173, 35, 67]
+        ];
+        let backwardwalk = [
             [10, 174, 35, 64],
             [54, 171, 37, 67],
             [100, 172, 35, 68],
@@ -225,7 +235,8 @@ export class Bastien extends Fighter {
         // this.frames = this.gen_map("ki-", ki);
         this.frames = this.gen_map("hit-", hit);
         this.frames = this.gen_map("dead-", dead);
-        this.frames = this.gen_map("walk-", walk);
+        this.frames = this.gen_map("forwardwalk-", forwardwalk);
+        this.frames = this.gen_map("backwardwalk-", backwardwalk);
         this.frames = this.gen_map("jump-", jump);
         this.frames = this.gen_map("idle-", idle);
         this.frames = this.gen_map("guard-", guard);
@@ -241,162 +252,25 @@ export class Bastien extends Fighter {
         this.frames = this.gen_map("crouch_uppercut-", crouchUppercut);
         this.frames = this.gen_map("crouch_spinkick-", crouchSpinkick);
         
+        this.animation = this.gen_AnimationObject([FighterState.FORWARDWALK], "forwardwalk", 6, 80);
+        this.animation = this.gen_AnimationObject([FighterState.BACKWARDWALK], "backwardwalk", 6, 80);
+        this.animation = this.gen_AnimationObject([FighterState.JUMP], "jump", 8, 130);
+        this.animation = this.gen_AnimationObject([FighterState.IDLE], "idle", 8, 130);
+        this.animation = this.gen_AnimationObject([FighterState.GUARD], "guard", 1, 100);
         // this.animation = this.gen_AnimationObject("ki", "ki", 25);
-        this.animation = this.gen_AnimationObject("hit", "hit", 1);
-        this.animation = this.gen_AnimationObject("walk", "walk", 6);
-        this.animation = this.gen_AnimationObject("jump", "jump", 8);
-        this.animation = this.gen_AnimationObject("idle", "idle", 8);
-        this.animation = this.gen_AnimationObject("dead", "dead", 12);
-        this.animation = this.gen_AnimationObject("guard", "guard", 1);
-        this.animation = this.gen_AnimationObject("punch", "punch", 7);
-        this.animation = this.gen_AnimationObject("entry", "entry", 11);
-        this.animation = this.gen_AnimationObject("hadoken", "hadoken", 8);
-        this.animation = this.gen_AnimationObject("up_kick", "up_kick", 6);
-        this.animation = this.gen_AnimationObject("low_kick", "low_kick", 6);
-        this.animation = this.gen_AnimationObject("uppercut", "uppercut", 8);
-        this.animation = this.gen_AnimationObject("crouch_kick", "crouch_kick", 3);
-        this.animation = this.gen_AnimationObject("crouch_punch", "crouch_punch", 3);
-        this.animation = this.gen_AnimationObject("standing_punch", "standing_punch", 3);
-        this.animation = this.gen_AnimationObject("crouch_spinkick", "crouch_spinkick", 5);
-        this.animation = this.gen_AnimationObject("crouch_uppercut", "crouch_uppercut", 11);
-        
-    }
-
-    handleKey(event) {
-        switch (event.key) {
-            case "ArrowLeft":
-                this.moveLeft();
-                break;
-            case "ArrowRight":
-                this.moveRight();
-                break;
-            case " ":
-                this.jump();
-                break;
-            case "g":
-            case "G":
-                this.punch();
-                this.punchPressed = true;
-                this.checkUpKick();
-                this.checkLowKick();
-                break;
-            case "ArrowUp":
-                this.upPressed = true;
-                this.checkUpKick();
-                break;
-            case "h":
-            case "H":
-                this.hadoken();
-                break;
-            case "ArrowDown":
-                this.downPressed = true;
-                this.guard();
-                this.checkLowKick();
-                break;
-            case "k":
-            case "K":
-                this.ki();
-                break;
-        }
-    }
-
-    handleKeyup(event) {
-        switch (event.key) {
-            case "ArrowLeft":
-            case "ArrowRight":
-                this.stopMovement();
-                break;
-            case "g":
-            case "G":
-                this.punchPressed = false;
-                break;
-            case "ArrowUp":
-                this.upPressed = false;
-                break;
-            case "h":
-            case "H":
-                break;
-            case "ArrowDown":
-                this.downPressed = false;
-                this.stopGuard();
-                break;
-            case " ":
-                this.jump();
-                jumpsound.play();
-                break;
-            case "k":
-            case "K":
-                this.ki();
-                break;
-        }
-    }
-
-    moveLeft() {
-        this.velocity = -100;
-        this.changeState('walk');
-        this.regardeDroite = false;
-    }
-
-    moveRight() {
-        this.velocity = 100;
-        this.changeState('walk');
-        this.regardeDroite = true;
-    }
-
-    jump() {
-        if (!this.jumping) {
-            this.jumping = true;
-            this.velocityY = this.jumpSpeed;
-            this.changeState('jump');
-        }
-    }
-
-    punch() {
-        this.isPunching = true;
-        this.changeState('punch');
-    }
-
-    hadoken() {
-        this.isHadoken = true;
-        this.changeState('hadoken');
-    }
-
-    stopMovement() {
-        this.velocity = 0;
-        if (!this.jumping) {
-            this.changeState('idle');
-        }
-    }
-    guard() {
-        this.changeState('guard');
-    }
-
-    stopGuard() {
-        this.changeState('idle');
-    }
-
-    upKick() {
-        this.changeState('up_kick');
-    }
-    checkUpKick() {
-        if (this.upPressed && this.punchPressed) {
-            this.upKick();
-        }
-    }
-
-    lowKick() {
-        this.changeState('low_kick');
-    }
-
-    checkLowKick() {
-        if (this.downPressed && this.punchPressed) {
-            this.lowKick();
-        }
-    }
-
-    ki() {
-        this.isKi = true;
-        this.changeState('ki');
+        // this.animation = this.gen_AnimationObject("hit", "hit", 1);
+        // this.animation = this.gen_AnimationObject("dead", "dead", 12);
+        // this.animation = this.gen_AnimationObject("punch", "punch", 7);
+        // this.animation = this.gen_AnimationObject("entry", "entry", 11);
+        // this.animation = this.gen_AnimationObject("hadoken", "hadoken", 8);
+        // this.animation = this.gen_AnimationObject("up_kick", "up_kick", 6);
+        // this.animation = this.gen_AnimationObject("low_kick", "low_kick", 6);
+        // this.animation = this.gen_AnimationObject("uppercut", "uppercut", 8);
+        // this.animation = this.gen_AnimationObject("crouch_kick", "crouch_kick", 3);
+        // this.animation = this.gen_AnimationObject("crouch_punch", "crouch_punch", 3);
+        // this.animation = this.gen_AnimationObject("standing_punch", "standing_punch", 3);
+        // this.animation = this.gen_AnimationObject("crouch_spinkick", "crouch_spinkick", 5);
+        // this.animation = this.gen_AnimationObject("crouch_uppercut", "crouch_uppercut", 11);
     }
 
 }
