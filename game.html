@@ -7,6 +7,8 @@
             body {
                 margin: 0px; 
                 padding: 0px;
+                --form-height: 6rem;
+                --form-content-size: 2rem;
             }
             body, 
             canvas {
@@ -20,22 +22,65 @@
             }
             img {
                 display: none;
-            }            
+            }   
+            form {
+                display: flex;
+                flex-wrap: wrap;
+                width: 100%;
+                justify-content: center;
+                align-items: center;
+                gap: var(--form-content-size);
+                height: var(--form-content-size);
+                padding: 5px;
+                margin: 10px;
+            }
+
+            form * {
+                font-size: var(--form-content-size);
+            }
+
+            input[type="checkbox"]{
+                width: var(--form-content-size);
+                height: var(--form-content-size);
+            }
+
+            main {
+                display: flex;
+                height: calc(100% - var(--form-height));
+            }
+            label {
+                color: white;
+            }
         </style>
-        <script type="module" src="./Js/fighters/Fighter.js"></script>
-        <script type="module" src="./Js/prog.js"></script>
-        
+        <script type="module" src="./Js/prog.js"></script>        
     </head>
     <body>
-        <audio autoplay loop id="music">
-            <source src='./assets/sound/main_menu/Find_Your_Own_Way.mp3' type="audio/mpeg">
-        </audio>
-        <canvas width="384" height="224"></canvas>
+        <form>
+            <div>
+                <input id="bastien" type="checkbox" name="fighter" value="Bastien">
+                <label for="bastien">Bastien</label>
+            </div>
+            <div>
+                <input id="mehdi" type="checkbox" name="fighter" value="Mehdi">
+                <label for="mehdi">Mehdi</label>
+            </div>
+            <select id="state-dropdown" name="state"></select>
+            <button type="submit">Transition!</button>
+        </form>
+        
+        <main>
+            <canvas width="384" height="224"></canvas>
+        </main>
         <img src=./assets/Background.png alt="background"  />
         <img src=./assets/bastien_akuma/png/Bastien.png alt="bastien"  />
         <img src=./assets/bastien_akuma/png/Bastien.png alt="ludovic"  />
-        <img src=./assets/bastien_akuma/png/Bastien.png alt="mehdi"  />
+        <img src=./assets/mehdi_fei_long/mehdi.png alt="mehdi"  />
         <img src=./assets/bastien_akuma/png/Bastien.png alt="tomas"  />
+        
+        <audio autoplay loop id="music">
+            <source src='./assets/sound/main_menu/Find_Your_Own_Way.mp3' type="audio/mpeg">
+        </audio>
+
     </body>
     <script>document.getElementById("music").volume = 0.35;</script>
 </html>

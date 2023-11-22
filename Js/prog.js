@@ -1,79 +1,85 @@
-// Importation des classes des combattants et autres composants nécessaires.
-import { Fighter } from './fighters/Fighter.js';
 import { Bastien } from './fighters/Bastien.js';
 import { Ludovic } from './fighters/Ludovic.js';
 import { Mehdi } from './fighters/Mehdi.js';
 import { Tomas } from './fighters/Tomas.js';
 import { Stage } from './gestions/Stage.js';
 import { FpsCounter } from './gestions/FpsCounter.js';
+import { FighterDirection, FighterState } from './constants/dfight.js';
+import { STAGE_FLOOR } from './constants/stage.js';
 
-// Fonction exécutée une fois que la fenêtre a fini de charger.
-window.onload = function() {
-    // Sélection du canvas et initialisation du contexte de rendu 2D.
+
+function populateMoveDropdown() {
+    let dropdown = document.getElementById('state-dropdown');
+    
+    Object.entries(FighterState).forEach(([, value]) => {
+        let option = document.createElement('option');
+        option.setAttribute('value', value);
+        option.innerText = value;
+        dropdown.appendChild(option);
+    });
+}
+    
+function handleFormSubmit(event, fighters) {
+    event.preventDefault();
+
+    let selectedCheckbox = Array
+    .from(event.target.querySelectorAll('input:checked'))
+    .map(checkbox => checkbox.value);
+
+    let options = event.target.querySelector('select');
+    
+    fighters.forEach(fighters => {
+        if (selectedCheckbox.includes(fighters.name)) {
+            fighters.changeState(options.value);
+        }
+    });
+}
+
+
+window.addEventListener('load', function() { 
+    populateMoveDropdown();
+
     let canvasInfo = document.querySelector('canvas');
     let ctx = canvasInfo.getContext('2d');
+    
 
-    // Définition de la position du sol.
-    let floor = 200;
-
-    // Désactivation de l'anti-aliasing pour un style pixel-art.
     ctx.imageSmoothingEnabled = false;
 
-    // Création d'une instance de Perso.
-    let bastien = new Bastien(100, floor, 0, floor);
-    let bastien2 = new Bastien(300, floor, 0, floor); 
+    let fighters = [
+        new Bastien(100, STAGE_FLOOR, FighterDirection.RIGHT),
+        new Mehdi(300, STAGE_FLOOR, FighterDirection.LEFT),
+    ];
 
-    // Initialisation des objets à dessiner et mettre à jour.
     let objets = [
         new Stage("./assets/Background.jpg"),
-        bastien,
-        bastien2,
+        ...fighters,
         new FpsCounter(),
     ];
 
-    // Gestion des événements de pression des touches.
-    window.addEventListener('keydown', function(event) {
-        bastien.handleKey(event);
-    });
-
-    // Gestion des événements de relâchement des touches.
-    window.addEventListener('keyup', function(event) {
-        bastien.handleKeyup(event);
-    });
-
-    // Structure pour le suivi du temps entre les frames.
     let frames_time = {
         passed: 0,
         delta: 0,
     };
 
+
     // Fonction de la boucle de jeu, appelée à chaque frame.
     function frame(time) {
-
-        // Mise à jour du temps écoulé depuis la dernière frame.
+        window.requestAnimationFrame(frame);
         frames_time = {
             delta: (time - frames_time.passed) / 1000,
             passed: time,
         }
-
-        // Mise à jour de chaque objet.
         for (let objet of objets) {
-            objet.update(frames_time, ctx, floor);
+            objet.update(frames_time, ctx, STAGE_FLOOR);
         }
-        // Dessin de chaque objet.
         for (let objet of objets) {
             objet.draw(ctx);
         }
-        // Demande de la prochaine frame.
-        window.requestAnimationFrame(frame);
     }
 
+    this.document.addEventListener('submit', (event) => handleFormSubmit(event,fighters));
     
-
-    // Début de la boucle de jeu.
     window.requestAnimationFrame(frame);
-
-    // Affichage de débogage.
     console.log(ctx);
     console.log("document is ready!");
-}
+});

@@ -1,0 +1,1 @@
+export let STAGE_FLOOR = 200;
