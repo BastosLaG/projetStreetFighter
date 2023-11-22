@@ -1,5 +1,7 @@
 import { Fighter } from './Fighter.js';
 
+var jumpsound = new Audio('./assets/sound/Bastien/DBZjumpSoundEffect.mp3');
+jumpsound.volume=0.4;
 export class Bastien extends Fighter {
     constructor(x, y, velocity) {
         super('Bastien', x, y, velocity);
@@ -320,6 +322,7 @@ export class Bastien extends Fighter {
                 break;
             case " ":
                 this.jump();
+                jumpsound.play();
                 break;
             case "k":
             case "K":
