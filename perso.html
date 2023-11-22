@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Univ-Fighter</title>
+        <style>
+            body{
+                background-color: black;
+            }
+            #buttonContainer {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: transparent;
+                text-align: center;
+                z-index: 3;
+            }
+            .menuButton {
+                display: block;
+                margin: 40px auto;
+                font-family: "./assets/font/stf.ttf";
+                font-size: 70px;
+                font-style: normal;
+                cursor: pointer;
+                background-color: transparent;
+                color: rgb(192, 182, 40);
+                border: none;
+                animation: menu_button;
+                animation-duration: 25s;
+                animation-iteration-count: 1;
+                animation-fill-mode: forwards;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="buttonContainer">
+            <button class="menuButton" id="startButton">AAA</a></button>
+            <button class="menuButton" id="creditButton">AAA</button>
+            <button class="menuButton" id="settingButton">AAA</button>
+            <button class="menuButton" id="creditButton">AAA</button>
+        </div>
+
+
+        <script type="module" src="./js/menu_buttons.js"></script>
+    </body>
+</html>

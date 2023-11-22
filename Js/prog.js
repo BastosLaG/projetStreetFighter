@@ -4,8 +4,8 @@ import { Bastien } from './fighters/Bastien.js';
 import { Ludovic } from './fighters/Ludovic.js';
 import { Mehdi } from './fighters/Mehdi.js';
 import { Tomas } from './fighters/Tomas.js';
-import { Stage } from './Stage.js';
-import { FpsCounter } from './FpsCounter.js';
+import { Stage } from './gestions/Stage.js';
+import { FpsCounter } from './gestions/FpsCounter.js';
 
 // Fonction exécutée une fois que la fenêtre a fini de charger.
 window.onload = function() {
