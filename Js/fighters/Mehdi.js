@@ -1,10 +1,10 @@
 import { Fighter } from './Fighter.js';
-import { FighterState, FighterDirection } from '../constants/dfight.js';
+import { FighterState, PushBox } from '../constants/dfight.js';
 
 
 export class Mehdi extends Fighter {
-    constructor(x, y, direction) {
-        super('Mehdi', x, y, direction);
+    constructor(x, y, direction, playerId) {
+        super('Mehdi', x, y, direction, playerId);
 
         this.image = document.body.querySelector('img[alt="mehdi"]');
         this.frames = new Map();
@@ -121,18 +121,18 @@ export class Mehdi extends Fighter {
         ];
 
         this.frames = this.gen_map("entry-", entry);
-        this.frames = this.gen_map("idle-", idle);
-        this.frames = this.gen_map("forwardwalk-", forwardwalk);
-        this.frames = this.gen_map("backwardwalk-", backwardwalk);
+        this.frames = this.gen_map("idle-", idle, PushBox.IDLEM);
+        this.frames = this.gen_map("forwardwalk-", forwardwalk,PushBox.WALKFORWARDM);
+        this.frames = this.gen_map("backwardwalk-", backwardwalk, PushBox.WALKBACKWARDM);
         this.frames = this.gen_map("upkick-", upkick);
         this.frames = this.gen_map("punch-", punch);
         this.frames = this.gen_map("lowkick-", lowkick);
-        this.frames = this.gen_map("jump-", jump);
+        this.frames = this.gen_map("jump-", jump, PushBox.JUMP);
 
-        this.animation = this.gen_AnimationObject("entry", "entry", 23);
+        this.animation = this.gen_AnimationObject(FighterState.ENTRY, "entry", 23, 80);
         this.animation = this.gen_AnimationObject([FighterState.IDLE], "idle", 7, 130);
-        this.animation = this.gen_AnimationObject([FighterState.FORWARDWALK], "forwardwalk", 8);
-        this.animation = this.gen_AnimationObject([FighterState.BACKWARDWALK], "backwardwalk", 8);
+        this.animation = this.gen_AnimationObject([FighterState.FORWARDWALK], "forwardwalk", 8, 80);        
+        this.animation = this.gen_AnimationObject([FighterState.BACKWARDWALK], "backwardwalk", 8, 80);
         this.animation = this.gen_AnimationObject("upkick", "upkick", 11);
         this.animation = this.gen_AnimationObject("punch", "punch", 5);
         this.animation = this.gen_AnimationObject("lowkick", "lowkick", 6);

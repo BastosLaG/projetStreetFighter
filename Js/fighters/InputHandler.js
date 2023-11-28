@@ -1,7 +1,9 @@
+import {Control, controls} from '../constants/control.js';
+import {FighterDirection} from '../constants/dfight.js';
+
 let heldkeys = new Set();
 
 function handleKeyDown(event) {
-    console.log(event)
     event.preventDefault();
     heldkeys.add(event.code);
 }
@@ -11,13 +13,13 @@ function handleKeyUp(event) {
     heldkeys.delete(event.code);
 }
 
-export function registerKeyboardEvent() {
+export function registerKeyboardEvents() {
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
 }
 
 // fonction pour notifier le changement d'état des touches
-export function addKeyStateChangeListener(callback) {
+export function addKeyStateChangeListener() {
     window.addEventListener('keyup', handleKeyDown);
     window.addEventListener('keydown', handleKeyUp);
 }
@@ -25,9 +27,10 @@ export function addKeyStateChangeListener(callback) {
 export let isKeyDown = (code) => heldkeys.has(code);
 export let isKeyUp = (code) => !heldkeys.has(code);
 
-export let isLeft = (id) => !isKeyDown(controls[id].keyboard[Controls.LEFT]);
-export let isRight = (id) => !isKeyDown(controls[id].keyboard[Controls.RIGHT]);
-export let isUp = (id) => !isKeyDown(controls[id].keyboard[Controls.UP]);
-export let isDown = (id) => !isKeyDown(controls[id].keyboard[Controls.DOWN]);
+export let isLeft = (id) => isKeyDown(controls[id].keyboard[Control.LEFT]);
+export let isRight = (id) => isKeyDown(controls[id].keyboard[Control.RIGHT]);
+export let isUp = (id) => isKeyDown(controls[id].keyboard[Control.UP]);
+export let isDown = (id) => isKeyDown(controls[id].keyboard[Control.DOWN]);
 
-
+export let isForward = (id, direction) => direction === FighterDirection.RIGHT ? isRight(id) : isLeft(id);
+export let isBackward = (id, direction) => direction === FighterDirection.LEFT ? isRight(id) : isLeft(id);
