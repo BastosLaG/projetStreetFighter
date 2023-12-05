@@ -24,8 +24,12 @@
         </style>
         <script type="module" src="./Js/fighters/Fighter.js"></script>
         <script type="module" src="./Js/prog.js"></script>
+        
     </head>
     <body>
+        <audio autoplay loop id="music">
+            <source src='./assets/sound/main_menu/Find_Your_Own_Way.mp3' type="audio/mpeg">
+        </audio>
         <canvas width="384" height="224"></canvas>
         <img src=./assets/Background.png alt="background"  />
         <img src=./assets/bastien_akuma/png/Bastien.png alt="bastien"  />
@@ -33,4 +37,5 @@
         <img src=./assets/bastien_akuma/png/Bastien.png alt="mehdi"  />
         <img src=./assets/bastien_akuma/png/Bastien.png alt="tomas"  />
     </body>
+    <script>document.getElementById("music").volume = 0.35;</script>
 </html>
