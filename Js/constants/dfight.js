@@ -9,5 +9,20 @@ export let FighterState = {
     BACKWARDWALK: 'backwardwalk',
     JUMP: 'jump',
     GUARD: 'guard',
+    IDLE_TURN: 'idleTurn',
+    ENTRY: 'entry',
 };
 
+export let PushBox = {
+    //Bastien pushbox
+    IDLEB: [-22, -67, 40, 66], 
+    WALKFORWARDB: [-20, -67, 40, 66],
+    WALKBACKWARDB: [-22, -67, 40, 66],
+
+    //Mehdi pushbox
+    IDLEM: [-22, -60, 44, 60], 
+    WALKFORWARDM: [-8, -69, 27, 66],
+    WALKBACKWARDM: [-8, -69, 27, 66],
+
+    JUMP: [- 18, -115, 32, 55],
+};
