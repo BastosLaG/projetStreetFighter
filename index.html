@@ -44,12 +44,17 @@
         </style>
     </head>
     <body>
+
+        <audio autoplay loop id="music"><source src='./assets/sound/main_menu/SmelloftheGame.mp3' type="audio/mpeg"></audio>
+        <script>document.getElementById("music").volume = 0.20;</script>
+        <video id="intro" class=video autoplay muted> <source src="./assets/sound/main_menu/introggst.mp4" type="video/mp4"> </video>
         <div id="buttonContainer">
             <button class="menuButton" id="startButton">Start</a></button>
             <button class="menuButton" id="creditButton">Demo</button>
             <button class="menuButton" id="settingButton">Settings</button>
             <button class="menuButton" id="creditButton">Credit</button>
         </div>
+        <script type="module" src="./Js/menu_buttons.js"></script>
         
         <audio autoplay loop id="music"><source src='./assets/sound/main_menu/SmelloftheGame.mp3' type="audio/mpeg"></audio>
         <script>document.getElementById("music").volume = 0.20;</script>
