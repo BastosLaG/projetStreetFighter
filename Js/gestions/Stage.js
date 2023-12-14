@@ -15,13 +15,13 @@ export class Stage {
         ctx.drawImage(
             this.image,
             sourceX, sourceY, sourceWidth, sourceHeight ,
-            x, y, sourceWidth, sourceHeight,
+            x, y, sourceWidth, sourceHeight*0.75,
         );
     }
 
     draw(ctx, camera){
-        this.drawFrame(ctx, 'stage-background', Math.floor( 192 - camera.position.x), -30 -camera.position.y);
-        this.drawFrame(ctx, 'stage-floor', Math.floor( 192 - camera.position.x), 176 - camera.position.y);
+        this.drawFrame(ctx, 'stage-background', Math.floor( 192 - camera.position.x), 31 -camera.position.y);
+        this.drawFrame(ctx, 'stage-floor', Math.floor( 192 - camera.position.x), 185 - camera.position.y);
     }
 }
 
