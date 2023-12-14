@@ -2,8 +2,7 @@ import { FighterDirection, FighterState } from '../constants/dfight.js';
 import { STAGE_FLOOR } from '../constants/stage.js';
 import * as control from './InputHandler.js';
 import { rectsOverlap } from './collision.js';
-
-
+import { Control } from '../constants/control.js';
 export class Fighter {
     constructor(name, x, y, direction, palyerId) {
         this.name = name;
@@ -14,6 +13,7 @@ export class Fighter {
         this.direction = direction;
         this.gravity = 0;
 
+        
         this.frames = new Map();
         this.animationFrame = 0;
         this.animationtimer = 0;
@@ -31,20 +31,18 @@ export class Fighter {
                 update: this.handleIdleState.bind(this),
                 validFrom: [ 
                     undefined, 
-                    FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK, FighterState.JUMP, 
-                ],
+                    FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK, FighterState.JUMP, FighterState.GUARD, FighterState.PUNCH],
+                
             },
             [FighterState.FORWARDWALK]: {   
                 init: this.handleMoveInit.bind(this),
                 update: this.handleWalkForwadeState.bind(this),
-                validFrom: [
-                    FighterState.IDLE,FighterState.FORWARDWALK],
+                validFrom: [ FighterState.IDLE,FighterState.FORWARDWALK],
             },
             [FighterState.BACKWARDWALK]: {
                 init: this.handleMoveInit.bind(this),
                 update: this.handleWalkBackwardState.bind(this),
-                validFrom: [ 
-                    FighterState.IDLE, FighterState.BACKWARDWALK ],
+                validFrom: [ FighterState.IDLE, FighterState.BACKWARDWALK ],
             },  
             [FighterState.JUMP]: {
                 init: this.handleJumpInit.bind(this),
@@ -54,7 +52,12 @@ export class Fighter {
             [FighterState.GUARD]: {
                 init: this.handleGuardInit.bind(this),
                 update: this.handleGuardInitialState.bind(this),
-                validFrom: [ FighterState.IDLE, FighterState.GUARD],
+                validFrom: [ FighterState.IDLE],
+            },
+            [FighterState.PUNCH]: {
+                init: this.handlePunchInit.bind(this),
+                update: this.handlePunchState.bind(this),
+                validFrom: [ FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK],
             },
             
 
@@ -62,33 +65,37 @@ export class Fighter {
         this.changeState(FighterState.IDLE);
     }
 
+
     handleIdleState() {
-        // Gestion du saut avec direction
-        if(control.isUp(this.playerId, this.direction)) {
-            if(control.isForward(this.playerId, this.direction)) {
-                // Saut en avant
-                this.changeState(FighterState.JUMPFORWARD);
-            } else if(control.isBackward(this.playerId, this.direction)) {
-                // Saut en arrière
-                this.changeState(FighterState.JUMPBACKWARD);
-            } else {
-                // Saut vertical
-                this.changeState(FighterState.JUMP);
-            }
-        }
-        // Gestion de la marche en avant
-        else if(control.isForward(this.playerId, this.direction)) {
+        let isJumping = control.isUp(this.playerId);
+        let isMovingForward = control.isForward(this.playerId, this.direction);
+        let isMovingBackward = control.isBackward(this.playerId, this.direction);
+    
+        if (isJumping && isMovingForward) {
+            // Combine jumping and moving forward
+            this.changeState(FighterState.JUMPFORWARD);
+        } else if (isJumping && isMovingBackward) {
+            // Combine jumping and moving backward
+            this.changeState(FighterState.JUMPBACKWARD);
+        } else if (isJumping) {
+            // Just jumping
+            this.changeState(FighterState.JUMP);
+        } else if (isMovingForward) {
+            // Just moving forward
             this.changeState(FighterState.FORWARDWALK);
-        }
-        // Gestion de la marche en arrière
-        else if(control.isBackward(this.playerId, this.direction)) {
+        } else if (isMovingBackward) {
+            // Just moving backward
             this.changeState(FighterState.BACKWARDWALK);
-        }
-        // Gestion de la garde
-        else if(control.isDown(this.playerId, this.direction)) {
+        } else if (control.isDown(this.playerId)) {
+            // Just guard
             this.changeState(FighterState.GUARD);
+        } else if (control.isControlPressed(this.playerId, Control.PUNCH)) {
+            // Just punch
+            this.changeState(FighterState.PUNCH);
         }
+
     }
+    
 
     
     
@@ -129,12 +136,12 @@ export class Fighter {
     changeState(newstate){
         if(newstate === this.currentState
              || !this.states[newstate].validFrom.includes(this.currentState)) return;
-
+    
         this.currentState = newstate;
         this.animationFrame = 0;
         this.states[this.currentState].init();
     }
-
+    
     
     // Idle
     handleIdleInit(){
@@ -165,13 +172,15 @@ export class Fighter {
     
     // Guard
 
-    handleGuardInit(state) { return; }
-    handleGuardInitialState() {
-        if (!control.isDown(this.playerId, this.direction)) {
-            this.changeState(FighterState.IDLE);
-        }
+    handleGuardInit() { 
+        this.velocity.x = 0;
+
     }
 
+
+    handlePunchInit() {
+        this.handleIdleInit();
+    }
 
     // Idle
     handleJumpState(time) {
@@ -186,10 +195,14 @@ export class Fighter {
 
     handleWalkForwadeState() {
         if(!control.isForward(this.playerId, this.direction)) this.changeState(FighterState.IDLE);
+        if(control.isDown(this.playerId)) this.changeState(FighterState.GUARD);
+        if(control.isUp(this.playerId)) this.changeState(FighterState.JUMP);
     }
 
     handleWalkBackwardState() {
         if(!control.isBackward(this.playerId, this.direction)) this.changeState(FighterState.IDLE);
+        if(control.isDown(this.playerId)) this.changeState(FighterState.GUARD);
+        if(control.isUp(this.playerId)) this.changeState(FighterState.JUMP);
     }
     // Jump
     handleJumpState(time) {
@@ -203,6 +216,23 @@ export class Fighter {
     // Move
     handleMoveState() {}
 
+    handleGuardInitialState() {
+        if (!control.isDown(this.playerId, this.direction)) {
+            this.changeState(FighterState.IDLE);
+        }
+    }
+    
+
+    handlePunchState() {    
+        if (this.animationFrame === 2) {
+            if (this.hasCollideWithOpponent()) {
+                this.opponent.changeState(FighterState.HIT);
+            }
+        }
+        if (this.animationFrame === 4) {
+            this.changeState(FighterState.IDLE);
+        }
+    }
 
     
     

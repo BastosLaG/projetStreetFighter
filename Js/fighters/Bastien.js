@@ -17,7 +17,7 @@ export class Bastien extends Fighter {
                 [FighterState.JUMPFORWARD]: 170,
                 [FighterState.JUMPBACKWARD]: -200,
             },
-            jump: -420,
+            jump: -350,
         }
         this.gravity = 1000;
 
@@ -242,7 +242,7 @@ export class Bastien extends Fighter {
         this.frames = this.gen_map("idle-", idle, PushBox.IDLEB);
         this.frames = this.gen_map("guard-", guard);
         this.frames = this.gen_map("entry-", entry);
-        this.frames = this.gen_map("punch-", punch);
+        this.frames = this.gen_map("punch-", punch, PushBox.IDLEB);
         this.frames = this.gen_map("up_kick-", upKick);
         this.frames = this.gen_map("hadoken-", hadoken);
         this.frames = this.gen_map("low_kick-", lowKick);
@@ -259,6 +259,9 @@ export class Bastien extends Fighter {
         this.animation = this.gen_AnimationObject([FighterState.IDLE], "idle", 8, 130);
         this.animation = this.gen_AnimationObject([FighterState.GUARD], "guard", 1, 100);
         this.animation = this.gen_AnimationObject([FighterState.ENTRY], "entry", 11, 80);
+        this.animation = this.gen_AnimationObject([FighterState.PUNCH], "punch", 7, 80);
+        this.animation = this.gen_AnimationObject(FighterState.HIT, "hit", 1, 80);
+
 
         // this.animation = this.gen_AnimationObject("ki", "ki", 25);
         // this.animation = this.gen_AnimationObject("hit", "hit", 1);

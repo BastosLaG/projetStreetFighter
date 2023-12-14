@@ -6,6 +6,7 @@ import { FighterDirection, FighterState } from './constants/dfight.js';
 import { STAGE_FLOOR } from './constants/stage.js';
 import { registerKeyboardEvents } from './fighters/InputHandler.js';
 import { StatusBar } from './overlays/StatusBar.js';
+import { Camera } from './camera.js';
 
 
 export class StreetFighterGame { 
@@ -19,8 +20,10 @@ export class StreetFighterGame {
         this.fighters[0].opponent = this.fighters[1];
         this.fighters[1].opponent = this.fighters[0];
 
+        this.camera = new Camera(440, 16, this.fighters);
+
         this.objets = [
-            new Stage("./assets/metro_bg.jpg"),
+            new Stage(),
             ...this.fighters,
             new FpsCounter(),
             new StatusBar(this.fighters),
@@ -39,13 +42,14 @@ export class StreetFighterGame {
     }
 
     update(){
+        this.camera.update(this.frames_time, this.ctx);
         for(let objet of this.objets){
-            objet.update(this.frames_time, this.ctx);
+            objet.update(this.frames_time, this.ctx, this.camera);
         }
     }
     draw(){
         for (let objet of this.objets) {
-            objet.draw(this.ctx);
+            objet.draw(this.ctx, this.camera);
         }
     }
     // Fonction de la boucle de jeu, appelée à chaque frame.

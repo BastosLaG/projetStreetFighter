@@ -15,7 +15,7 @@ export class Mehdi extends Fighter {
                 [FighterState.JUMPFORWARD]: 170,
                 [FighterState.JUMPBACKWARD]: -200,
             },
-            jump: -420,
+            jump: -350,
         }
         this.gravity = 1000;
 
@@ -128,6 +128,7 @@ export class Mehdi extends Fighter {
         this.frames = this.gen_map("punch-", punch);
         this.frames = this.gen_map("lowkick-", lowkick);
         this.frames = this.gen_map("jump-", jump, PushBox.JUMP);
+        
 
         this.animation = this.gen_AnimationObject(FighterState.ENTRY, "entry", 23, 80);
         this.animation = this.gen_AnimationObject([FighterState.IDLE], "idle", 7, 130);
@@ -137,7 +138,7 @@ export class Mehdi extends Fighter {
         this.animation = this.gen_AnimationObject("punch", "punch", 5);
         this.animation = this.gen_AnimationObject("lowkick", "lowkick", 6);
         this.animation = this.gen_AnimationObject([FighterState.JUMP], "jump", 9, 130);
-        
+        this.animation = this.gen_AnimationObject([FighterState.PUNCH], "punch", 5, 130);
 
     }
 }
