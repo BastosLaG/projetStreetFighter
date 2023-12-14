@@ -59,7 +59,9 @@ export class Fighter {
                 update: this.handleGuardInitialState.bind(this),
                 validFrom: [ FighterState.IDLE 
             ],
-            },      
+            },
+            
+
         }
         this.changeState(FighterState.IDLE);
     }
@@ -85,6 +87,10 @@ export class Fighter {
         // Gestion de la marche en arrière
         else if(control.isBackward(this.playerId, this.direction)) {
             this.changeState(FighterState.BACKWARDWALK);
+        }
+        // Gestion de la garde
+        else if(control.isDown(this.playerId, this.direction)) {
+            this.changeState(FighterState.GUARD);
         }
     }
 
@@ -163,7 +169,7 @@ export class Fighter {
     
     // Guard
     handleGuardInit(){
-        this.velocity.x = 0;
+
     }
 
     // Idle
@@ -202,11 +208,16 @@ export class Fighter {
 
     // Move
     handleMoveState() {}
+
+
     // Guard
     handleGuardInitialState() {
-        if(!control.isDown(this.playerId, this.direction)) this.changeState(FighterState.IDLE);
-
+        if (!control.isDown(this.playerId, this.direction)) {
+            this.changeState(FighterState.IDLE);
+        }
     }
+
+
     
     
     gen_map(text, listePosition, pushBox = null) {

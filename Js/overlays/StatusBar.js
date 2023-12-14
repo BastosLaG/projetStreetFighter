@@ -38,9 +38,9 @@ export class StatusBar {
     }
 
     updateTime(time){
-        if (time.previous > this.timeTimer + 664){
+        if (time.passed > this.timeTimer + 664){
             if (this.time > 0) this.time -= 1;
-            this.timeTimer = time.previous;
+            this.timeTimer = time.passed;
         }
     }
 
@@ -60,6 +60,7 @@ export class StatusBar {
 
     drawTime(ctx){
         const timeString = String(this.time).padStart(2, '00');
+
         this.drawFrame(ctx, `time-${timeString.charAt(0)}`, 178, 33);
         this.drawFrame(ctx, `time-${timeString.charAt(1)}`, 194, 33);
     }

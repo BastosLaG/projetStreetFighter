@@ -1,7 +1,5 @@
 import { Bastien } from './fighters/Bastien.js';
 import { Mehdi } from './fighters/Mehdi.js';
-// import { Ludovic } from './fighters/Ludovic.js';
-// import { Tomas } from './fighters/Tomas.js';
 import { Stage } from './gestions/Stage.js';
 import { FpsCounter } from './gestions/FpsCounter.js';
 import { FighterDirection, FighterState } from './constants/dfight.js';
@@ -22,7 +20,7 @@ export class StreetFighterGame {
         this.fighters[1].opponent = this.fighters[0];
 
         this.objets = [
-            new Stage("./assets/Background.jpg"),
+            new Stage("./assets/metro_bg.jpg"),
             ...this.fighters,
             new FpsCounter(),
             new StatusBar(this.fighters),
@@ -53,7 +51,7 @@ export class StreetFighterGame {
     // Fonction de la boucle de jeu, appelée à chaque frame.
     frame(time) {
         window.requestAnimationFrame(this.frame.bind(this));
-
+        
         this.frames_time = {
             delta: (time - this.frames_time.passed) / 1000,
             passed: time,
