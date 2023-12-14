@@ -90,3 +90,8 @@ setTimeout(function () {
 //         // Or introElement.style.display = 'none';
 //     }
 // };
+var chain = $("#chains")[0];
+$(".img-wrapper").mouseenter(function() {
+    chain.currentTime = 0;
+		chain.play();
+});
