@@ -83,7 +83,6 @@ setTimeout(function () {
 //     }
 // });
 
-
 function removeIntroElement() {
     let introElement = document.querySelector('.intro-background');
     if (introElement) {
