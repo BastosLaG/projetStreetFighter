@@ -83,15 +83,11 @@ setTimeout(function () {
 //     }
 // });
 
-// function removeIntroElement() {
-//     var introElement = document.querySelector('.intro-background');
-//     if (introElement) {
-//         introElement.parentNode.removeChild(introElement);
-//         // Or introElement.style.display = 'none';
-//     }
-// };
-// let chain = $("#chains")[0];
-// $(".img-wrapper").mouseenter(function() {
-//     chain.currentTime = 0;
-// 		chain.play();
-// });
+
+function removeIntroElement() {
+    let introElement = document.querySelector('.intro-background');
+    if (introElement) {
+        introElement.parentNode.removeChild(introElement);
+        // Or introElement.style.display = 'none';
+    }
+};
