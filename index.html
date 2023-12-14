@@ -1,64 +1,71 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Univ-Fighter</title>
-        <style>
-            body {
-                background-color: black;
-            }
-            #buttonContainer {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: transparent;
-                text-align: center;
-                z-index: 3;
-            }
-            .menuButton {
-                display: block;
-                margin: 40px auto;
-                font-family: "./assets/font/stf.ttf";
-                font-size: 70px;
-                font-style: normal;
-                cursor: pointer;
-                background-color: transparent;
-                color: rgb(192, 182, 40);
-                border: none;
-                animation: menu_button;
-                animation-duration: 25s;
-                animation-iteration-count: 1;
-                animation-fill-mode: forwards;
-            }
-            .video {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                transform: translate(-50%, -50%);
-                z-index: 3;
-            }
-        </style>
-    </head>
-    <body>
 
-        <audio autoplay loop id="music"><source src='./assets/sound/main_menu/SmelloftheGame.mp3' type="audio/mpeg"></audio>
-        <script>document.getElementById("music").volume = 0.20;</script>
-        <video id="intro" class=video autoplay muted> <source src="./assets/sound/main_menu/introggst.mp4" type="video/mp4"> </video>
-        <div id="buttonContainer">
-            <button class="menuButton" id="startButton">Start</a></button>
-            <button class="menuButton" id="creditButton">Demo</button>
-            <button class="menuButton" id="settingButton">Settings</button>
-            <button class="menuButton" id="creditButton">Credit</button>
-        </div>
-        <script type="module" src="./Js/menu_buttons.js"></script>
-        
-        <audio autoplay loop id="music"><source src='./assets/sound/main_menu/SmelloftheGame.mp3' type="audio/mpeg"></audio>
-        <script>document.getElementById("music").volume = 0.20;</script>
-        <video id="intro" class=video autoplay muted> <source src="./assets/sound/main_menu/introggst.mp4" type="video/mp4"> </video>
-        <script type="module" src="./Js/menu_buttons.js"></script>
-    </body>
+<head>
+    <meta charset="UTF-8" />
+    <title>Univ-Fighter</title>
+    <style>
+        body {
+            background-color: black;
+        }
+
+        #buttonContainer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: transparent;
+            text-align: center;
+            z-index: 3;
+        }
+
+        .menuButton {
+            display: block;
+            margin: 40px auto;
+            font-family: "./assets/font/stf.ttf";
+            font-size: 70px;
+            font-style: normal;
+            cursor: pointer;
+            background-color: transparent;
+            color: rgb(192, 182, 40);
+            border: none;
+            animation: menu_button;
+            animation-duration: 25s;
+            animation-iteration-count: 1;
+            animation-fill-mode: forwards;
+        }
+
+        .video {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+        }
+    </style>
+</head>
+
+<body>
+
+    <audio autoplay loop id="music">
+        <source src='./assets/sound/main_menu/SmelloftheGame.mp3' type="audio/mpeg">
+    </audio>
+    <script>
+        document.getElementById("music").volume = 0.20;
+    </script>
+    <video id="intro" class=video autoplay muted>
+        <source src="./assets/sound/main_menu/introggst.mp4" type="video/mp4">
+    </video>
+    <div id="buttonContainer">
+        <button class="menuButton" id="startButton">Start</button>
+        <button class="menuButton" id="demoButton">Demo</button>
+        <button class="menuButton" id="settingButton">Settings</button>
+        <button class="menuButton" id="creditButton">Credit</button>
+    </div>
+    <script type="module" src="./Js/menu_buttons.js"></script>
+</body>
+
 </html>
