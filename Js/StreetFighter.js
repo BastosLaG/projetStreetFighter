@@ -1,7 +1,7 @@
 import { Bastien } from './fighters/Bastien.js';
-import { Ludovic } from './fighters/Ludovic.js';
 import { Mehdi } from './fighters/Mehdi.js';
-import { Tomas } from './fighters/Tomas.js';
+// import { Ludovic } from './fighters/Ludovic.js';
+// import { Tomas } from './fighters/Tomas.js';
 import { Stage } from './gestions/Stage.js';
 import { FpsCounter } from './gestions/FpsCounter.js';
 import { FighterDirection, FighterState } from './constants/dfight.js';
