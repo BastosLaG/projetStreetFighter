@@ -51,12 +51,14 @@ export class Fighter {
             [FighterState.JUMP]: {
                 init: this.handleJumpInit.bind(this),
                 update: this.handleJumpState.bind(this),
-                validFrom: [ FighterState.IDLE ],
+                validFrom: [ FighterState.IDLE
+                ],
             },
             [FighterState.GUARD]: {
                 init: this.handleGuardInit.bind(this),
                 update: this.handleGuardInitialState.bind(this),
-                validFrom: [ FighterState.IDLE ],
+                validFrom: [ FighterState.IDLE 
+            ],
             },      
         }
         this.changeState(FighterState.IDLE);
@@ -139,7 +141,7 @@ export class Fighter {
     }
     // Jump
     handleJumpInit(){
-        this.velocity.y = 0;
+        this.velocity.y = this.initialVelocity.jump;
     
         // Déterminer la direction du saut en fonction des entrées du joueur
         if (control.isForward(this.playerId, this.direction)) {
@@ -171,13 +173,14 @@ export class Fighter {
             this.position.y = STAGE_FLOOR;
             this.changeState(FighterState.IDLE);
         }
-    
+/*
         // Maintenir le mouvement horizontal pendant le saut
         if (control.isForward(this.playerId, this.direction)) {
             this.velocity.x = this.initialVelocity.jumpForward;
         } else if (control.isBackward(this.playerId, this.direction)) {
             this.velocity.x = -this.initialVelocity.jumpBackward;
         }
+        */
     }
     
 

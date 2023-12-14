@@ -7,6 +7,7 @@ import { FpsCounter } from './gestions/FpsCounter.js';
 import { FighterDirection, FighterState } from './constants/dfight.js';
 import { STAGE_FLOOR } from './constants/stage.js';
 import { registerKeyboardEvents } from './fighters/InputHandler.js';
+import { StatusBar } from './overlays/StatusBar.js';
 
 
 export class StreetFighterGame { 
@@ -24,6 +25,7 @@ export class StreetFighterGame {
             new Stage("./assets/Background.jpg"),
             ...this.fighters,
             new FpsCounter(),
+            new StatusBar(this.fighters),
         ];
         this.frames_time = {
             passed: 0,
