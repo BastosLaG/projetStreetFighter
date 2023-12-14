@@ -2,7 +2,7 @@ import { Bastien } from './fighters/Bastien.js';
 import { Mehdi } from './fighters/Mehdi.js';
 import { Stage } from './gestions/Stage.js';
 import { FpsCounter } from './gestions/FpsCounter.js';
-import { FighterDirection, FighterState } from './constants/dfight.js';
+import { FighterDirection } from './constants/dfight.js';
 import { STAGE_FLOOR } from './constants/stage.js';
 import { registerKeyboardEvents } from './fighters/InputHandler.js';
 import { StatusBar } from './overlays/StatusBar.js';
@@ -13,12 +13,12 @@ export class StreetFighterGame {
     constructor() {
         this.ctx = this.getContext();
         this.fighters = [
-            new Mehdi(300, STAGE_FLOOR, FighterDirection.LEFT, 0),
-            new Bastien(100, STAGE_FLOOR, FighterDirection.RIGHT, 1),
+            new Bastien(552, STAGE_FLOOR, FighterDirection.RIGHT, 1),
+            new Mehdi(728, STAGE_FLOOR, FighterDirection.LEFT, 0),
         ];
 
-        this.fighters[0].opponent = this.fighters[1];
         this.fighters[1].opponent = this.fighters[0];
+        this.fighters[0].opponent = this.fighters[1];
 
         this.camera = new Camera(440, 16, this.fighters);
 

@@ -1,3 +1,5 @@
+export let PUSH_FRICTION = 66;
+
 export let FighterDirection = {
     LEFT: -1,
     RIGHT: 1,
@@ -15,6 +17,10 @@ export let FighterState = {
     HIT: 'hit',
 };
 
+export let frameDelay = {
+    FREEZE: 0,
+    TRANSITION: -1,
+};
 
 export let PushBox = {
     //Bastien pushbox
