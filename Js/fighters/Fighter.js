@@ -38,27 +38,23 @@ export class Fighter {
                 init: this.handleMoveInit.bind(this),
                 update: this.handleWalkForwadeState.bind(this),
                 validFrom: [
-                    FighterState.IDLE,FighterState.FORWARDWALK, 
-                ],
+                    FighterState.IDLE,FighterState.FORWARDWALK],
             },
             [FighterState.BACKWARDWALK]: {
                 init: this.handleMoveInit.bind(this),
                 update: this.handleWalkBackwardState.bind(this),
                 validFrom: [ 
-                    FighterState.IDLE, FighterState.BACKWARDWALK, 
-                ],
+                    FighterState.IDLE, FighterState.BACKWARDWALK ],
             },  
             [FighterState.JUMP]: {
                 init: this.handleJumpInit.bind(this),
                 update: this.handleJumpState.bind(this),
-                validFrom: [ FighterState.IDLE
-                ],
+                validFrom: [ FighterState.IDLE],
             },
             [FighterState.GUARD]: {
                 init: this.handleGuardInit.bind(this),
                 update: this.handleGuardInitialState.bind(this),
-                validFrom: [ FighterState.IDLE 
-            ],
+                validFrom: [ FighterState.IDLE, FighterState.GUARD],
             },
             
 
@@ -168,9 +164,14 @@ export class Fighter {
     }
     
     // Guard
-    handleGuardInit(){
 
+    handleGuardInit(state) { return; }
+    handleGuardInitialState() {
+        if (!control.isDown(this.playerId, this.direction)) {
+            this.changeState(FighterState.IDLE);
+        }
     }
+
 
     // Idle
     handleJumpState(time) {
@@ -179,14 +180,7 @@ export class Fighter {
             this.position.y = STAGE_FLOOR;
             this.changeState(FighterState.IDLE);
         }
-/*
-        // Maintenir le mouvement horizontal pendant le saut
-        if (control.isForward(this.playerId, this.direction)) {
-            this.velocity.x = this.initialVelocity.jumpForward;
-        } else if (control.isBackward(this.playerId, this.direction)) {
-            this.velocity.x = -this.initialVelocity.jumpBackward;
-        }
-        */
+
     }
     
 
@@ -208,14 +202,6 @@ export class Fighter {
 
     // Move
     handleMoveState() {}
-
-
-    // Guard
-    handleGuardInitialState() {
-        if (!control.isDown(this.playerId, this.direction)) {
-            this.changeState(FighterState.IDLE);
-        }
-    }
 
 
     
