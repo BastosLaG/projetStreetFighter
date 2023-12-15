@@ -120,11 +120,17 @@ export class Mehdi extends Fighter {
             [423, 1080, 46, 51]
         ];
 
+        let guard = [
+            [12, 658, 42, 56]
+        ];
+        this.frames = this.gen_map("guard-", guard);
+        this.animation = this.gen_AnimationObject([FighterState.GUARD], "guard", 1, 100);
+
         this.frames = this.gen_map("entry-", entry);
         this.frames = this.gen_map("idle-", idle, PushBox.IDLEM, HurtBox.HURT_IDLEM);
         this.frames = this.gen_map("forwardwalk-", forwardwalk,PushBox.WALKFORWARDM, HurtBox.HURT_WALKFORWARDM);
         this.frames = this.gen_map("backwardwalk-", backwardwalk, PushBox.WALKBACKWARDM, HurtBox.HURT_WALKBACKWARDM);
-        this.frames = this.gen_map("upkick-", upkick);
+        this.frames = this.gen_map("upkick-", upkick, PushBox.IDLEM, HurtBox.HURT_IDLEM, HitBox.UPKICKM);
         this.frames = this.gen_map("punch-", punch, PushBox.IDLEM, HurtBox.HURT_IDLEM, HitBox.PUNCHM);
         this.frames = this.gen_map("lowkick-", lowkick);
         this.frames = this.gen_map("jump-", jump, PushBox.JUMP, HurtBox.HURT_JUMP);
@@ -135,7 +141,7 @@ export class Mehdi extends Fighter {
         this.animation = this.gen_AnimationObject([FighterState.IDLE], "idle", 7, 130, FrameDelay.FREEZE);
         this.animation = this.gen_AnimationObject([FighterState.FORWARDWALK], "forwardwalk", 8, 80, FrameDelay.FREEZE);        
         this.animation = this.gen_AnimationObject([FighterState.BACKWARDWALK], "backwardwalk", 8, 80, FrameDelay.FREEZE);
-        this.animation = this.gen_AnimationObject([FighterState.UPKICK], "upkick", 11, FrameDelay.FREEZE);
+        this.animation = this.gen_AnimationObject([FighterState.UPKICK], "upkick", 11, 110, FrameDelay.FREEZE);
         this.animation = this.gen_AnimationObject("lowkick", "lowkick", 6, FrameDelay.FREEZE);
         this.animation = this.gen_AnimationObject([FighterState.JUMP], "jump", 9, 130, FrameDelay.FREEZE);
         this.animation = this.gen_AnimationObject([FighterState.PUNCH], "punch", 5, 130, FrameDelay.FREEZE);

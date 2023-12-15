@@ -424,7 +424,7 @@ export class Fighter {
         // Gérer la limite droite du canvas
         this.position.x = Math.min(this.position.x, ctx.canvas.width - this.boxes.push.width);
     
-        // Gérer la limite gauche du canvas
+        // Gérer la limite gauche du canvasq
         this.position.x = Math.max(this.position.x, 0);
     
         // Gestion de la collision avec l'opposant

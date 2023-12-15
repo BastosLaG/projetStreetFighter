@@ -18,7 +18,7 @@ export let controls = [
             [Control.UP]: 'ArrowUp',
             [Control.DOWN]: 'ArrowDown',
             [Control.PUNCH]: 'ControlRight',
-            [Control.UPKICK]: 'MajRIGHT',
+            [Control.UPKICK]: 'ShiftRight',
 
 
         },
