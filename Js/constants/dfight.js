@@ -1,4 +1,5 @@
 export let PUSH_FRICTION = 66;
+export let FIGHTER_START_DISTANCE = 88;
 
 export let FighterDirection = {
     LEFT: -1,

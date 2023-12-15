@@ -8,7 +8,7 @@ export class Stage {
         ]);
     }
 
-    update() {}
+    update() { }
 
     drawFrame(ctx, frame, x, y) {
         const [sourceX, sourceY, sourceWidth, sourceHeight] = this.frames.get(frame)

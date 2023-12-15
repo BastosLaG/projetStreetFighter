@@ -2,8 +2,8 @@ import { Bastien } from './fighters/Bastien.js';
 import { Mehdi } from './fighters/Mehdi.js';
 import { Stage } from './gestions/Stage.js';
 import { FpsCounter } from './gestions/FpsCounter.js';
-import { FighterDirection } from './constants/dfight.js';
-import { STAGE_FLOOR } from './constants/stage.js';
+import { FIGHTER_START_DISTANCE, FighterDirection } from './constants/dfight.js';
+import { STAGE_FLOOR, STAGE_MID_POINT, STAGE_PADDING } from './constants/stage.js';
 import { registerKeyboardEvents } from './fighters/InputHandler.js';
 import { StatusBar } from './overlays/StatusBar.js';
 import { Camera } from './camera.js';
@@ -13,14 +13,14 @@ export class StreetFighterGame {
     constructor() {
         this.ctx = this.getContext();
         this.fighters = [
-            new Bastien(552, STAGE_FLOOR, FighterDirection.RIGHT, 1),
-            new Mehdi(728, STAGE_FLOOR, FighterDirection.LEFT, 0),
+            new Bastien(STAGE_MID_POINT + STAGE_PADDING - FIGHTER_START_DISTANCE, STAGE_FLOOR, FighterDirection.RIGHT, 1),
+            new Mehdi(STAGE_MID_POINT + STAGE_PADDING + FIGHTER_START_DISTANCE, STAGE_FLOOR, FighterDirection.LEFT, 0),
         ];
 
         this.fighters[1].opponent = this.fighters[0];
         this.fighters[0].opponent = this.fighters[1];
 
-        this.camera = new Camera(440, 16, this.fighters);
+        this.camera = new Camera(STAGE_MID_POINT + STAGE_PADDING - (this.ctx.canvas.width / 2), 16, this.fighters);
 
         this.objets = [
             new Stage(),
