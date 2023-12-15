@@ -130,6 +130,7 @@ export class Mehdi extends Fighter {
         this.frames = this.gen_map("jump-", jump, PushBox.JUMP, HurtBox.HURT_JUMP);
         
 
+
         this.animation = this.gen_AnimationObject(FighterState.ENTRY, "entry", 23, 80, FrameDelay.FREEZE);
         this.animation = this.gen_AnimationObject([FighterState.IDLE], "idle", 7, 130, FrameDelay.FREEZE);
         this.animation = this.gen_AnimationObject([FighterState.FORWARDWALK], "forwardwalk", 8, 80, FrameDelay.FREEZE);        

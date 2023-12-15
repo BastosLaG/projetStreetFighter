@@ -17,21 +17,21 @@ export class FpsCounter {
     }
 
     draw(ctx) {
-        ctx.font = "Bold 14px Arial";
+        ctx.font = "14px Arial";
         ctx.fillStyle = "white";
         ctx.strokeStyle = "black";
         ctx.lineWidth = 2;
 
-        let text = `FPS: ${this.fps}`;
+        let text = `${this.fps}`;
         let metrics = ctx.measureText(text);
         let textWidth = metrics.width;
         let x = ctx.canvas.width - textWidth - 10; // positionner en haut à droite
-        let y = 20;
+        let y = 220;
 
         ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'; // fond semi-transparent
-        ctx.fillRect(x - 5, 5, textWidth + 10, 20);
+        ctx.fillRect(x - 5, 205, textWidth + 10, 20);
 
-        ctx.fillStyle = "white";
+        ctx.fillStyle = "#00FF00";
         ctx.strokeText(text, x, y);
         ctx.fillText(text, x, y);
     }

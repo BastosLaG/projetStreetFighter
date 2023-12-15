@@ -7,6 +7,7 @@ export let Control = {
     UPKICK: 'upkick',
 
 
+
 };
 
 export let controls = [
@@ -18,6 +19,7 @@ export let controls = [
             [Control.DOWN]: 'ArrowDown',
             [Control.PUNCH]: 'ControlRight',
             [Control.UPKICK]: 'MajRIGHT',
+
 
         },
     },

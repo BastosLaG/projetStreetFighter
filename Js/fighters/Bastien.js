@@ -244,6 +244,7 @@ export class Bastien extends Fighter {
         this.frames = this.gen_map("entry-", entry);
         this.frames = this.gen_map("punch-", punch, PushBox.IDLEB, HurtBox.HURT_IDLEB, HitBox.PUNCHB);
         this.frames = this.gen_map("up_kick-", upKick, PushBox.IDLEB, HurtBox.HURT_IDLEB, HitBox.UPKICKB);
+
         this.frames = this.gen_map("hadoken-", hadoken);
         this.frames = this.gen_map("low_kick-", lowKick);
         this.frames = this.gen_map("uppercut-", uppercut);

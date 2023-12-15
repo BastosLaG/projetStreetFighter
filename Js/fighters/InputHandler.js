@@ -53,3 +53,4 @@ export let isBackward = (id, direction) => direction === FighterDirection.LEFT ?
 
 export let isPunch = (id) => isKeyPressed(controls[id].keyboard[Control.PUNCH]);
 export let isUpKick = (id) => isKeyPressed(controls[id].keyboard[Control.UPKICK]);
+

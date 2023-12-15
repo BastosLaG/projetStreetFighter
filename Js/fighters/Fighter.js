@@ -36,7 +36,7 @@ export class Fighter {
                 validFrom: [ 
                     undefined, 
                     FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK, FighterState.JUMP, FighterState.GUARD, FighterState.PUNCH, FighterState.UPKICK],
-                
+ 
             },
             [FighterState.FORWARDWALK]: {   
                 init: this.handleMoveInit.bind(this),
@@ -52,11 +52,13 @@ export class Fighter {
                 init: this.handleJumpInit.bind(this),
                 update: this.handleJumpState.bind(this),
                 validFrom: [ FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK],
+
             },
             [FighterState.GUARD]: {
                 init: this.handleGuardInit.bind(this),
                 update: this.handleGuardInitialState.bind(this),
                 validFrom: [ FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK],
+
             },
             [FighterState.PUNCH]: {
                 init: this.handlePunchInit.bind(this),
@@ -68,6 +70,7 @@ export class Fighter {
                 update: this.handleUpKickState.bind(this),
                 validFrom: [ FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK],
             },
+
             
 
         }
@@ -76,6 +79,7 @@ export class Fighter {
 
 
     isAnimationCompleted = () => this.animations[this.currentState][this.animationFrame][1] === FrameDelay.TRANSITION;
+
 
     handleIdleState() {
         let isJumping = control.isUp(this.playerId);
@@ -107,6 +111,7 @@ export class Fighter {
             // Just upkick
             this.changeState(FighterState.UPKICK);
         }
+
 
     }
     
@@ -160,13 +165,14 @@ export class Fighter {
             console.error(`Invalid state transition from ${this.currentState} to ${newstate}`);
             return;
         }
+
     
         this.currentState = newstate;
         this.animationFrame = 0;
         this.states[this.currentState].init();
     }
     
-    
+
     
     // Idle
     handleIdleInit(){
@@ -232,6 +238,7 @@ export class Fighter {
         if(control.isUp(this.playerId)) this.changeState(FighterState.JUMP);
     }   
 
+
     handleWalkBackwardState() {
         if(!control.isBackward(this.playerId, this.direction)) this.changeState(FighterState.IDLE);
         if(control.isDown(this.playerId)) this.changeState(FighterState.GUARD);
@@ -276,9 +283,11 @@ export class Fighter {
         }
         if (this.animationFrame === 4) {
             this.boxes.hit = { x: 0, y: 0, width: 0, height: 0 }; // Désactiver la hitbox
+
             this.changeState(FighterState.IDLE);
         }
     }
+
     
 
     

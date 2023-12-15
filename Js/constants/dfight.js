@@ -1,3 +1,6 @@
+export let PUSH_FRICTION = 66;
+export let FIGHTER_START_DISTANCE = 88;
+
 export let FighterDirection = {
     LEFT: -1,
     RIGHT: 1,
@@ -16,6 +19,11 @@ export let FighterState = {
     HIT: 'hit',
 };
 
+export let frameDelay = {
+    FREEZE: 0,
+    TRANSITION: -1,
+};
+
 export let FrameDelay = {
     FREEZE: 0,
     TRANSISTION: -2,    
@@ -23,10 +31,12 @@ export let FrameDelay = {
 
 export let PushBox = {
     //Bastien pushbox
+
     IDLEB: [-18, -67, 35, 66], 
     WALKFORWARDB:[-18, -67, 35, 66], 
     WALKBACKWARDB: [-18, -67, 35, 66], 
     HITB: [-18, -67, 35, 66], 
+
     //Mehdi pushbox
     IDLEM: [-18, -60, 37, 60], 
     WALKFORWARDM: [-8, -69, 27, 66],
