@@ -13,12 +13,22 @@ export class StreetFighterGame {
     constructor() {
         this.ctx = this.getContext();
         this.fighters = [
+<<<<<<< Updated upstream
             new Mehdi(300, STAGE_FLOOR, FighterDirection.LEFT, 0),
             new Bastien(100, STAGE_FLOOR, FighterDirection.RIGHT, 1),
+=======
+            new Bastien(104, STAGE_FLOOR, FighterDirection.RIGHT, 1),
+            new Mehdi(280, STAGE_FLOOR, FighterDirection.LEFT, 0),
+>>>>>>> Stashed changes
         ];
 
         this.fighters[0].opponent = this.fighters[1];
+<<<<<<< Updated upstream
         this.fighters[1].opponent = this.fighters[0];
+=======
+
+        this.camera = new Camera(448, 16, this.fighters);
+>>>>>>> Stashed changes
 
         this.objets = [
             new Stage("./assets/Background.jpg"),

@@ -4,7 +4,7 @@ export class Stage {
         this.image.src = source;
     }
 
-    update() {}
+    update() { }
 
     draw(ctx){
         ctx.drawImage(this.image, 0, 0, ctx.canvas.width, ctx.canvas.height);

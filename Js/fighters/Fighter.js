@@ -350,12 +350,12 @@ export class Fighter {
             this.image, 
             x, y, 
             width, height, 
-            -originX, -originY, 
+            -originX, 
+            -originY, 
             width, height
         );
         ctx.restore(); // Restaure l'état précédent du contexte
         
         this.draw_debug(ctx);
     }
-    
 }
