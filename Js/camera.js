@@ -10,6 +10,7 @@ export class Camera {
         // Update Y position
         this.position.y = -6 + Math.floor(Math.min(this.fighters[1].position.y, this.fighters[0].position.y) / 10);
 
+        // -------------------TEST PARALLAX CA MARCHE PAAAAAAAAAAAAAAAAAAAAAAAS !!!!!-------------------
         // Update X position
         // let lowX = Math.min(this.fighters[1].position.x, this.fighters[0].position.x);
         // let highX = Math.max(this.fighters[1].position.x, this.fighters[0].position.x);
