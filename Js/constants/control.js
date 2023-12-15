@@ -4,6 +4,9 @@ export let Control = {
     UP: 'up',
     DOWN: 'down',
     PUNCH: 'punch',
+    UPKICK: 'upkick',
+
+
 
 };
 
@@ -15,6 +18,8 @@ export let controls = [
             [Control.UP]: 'ArrowUp',
             [Control.DOWN]: 'ArrowDown',
             [Control.PUNCH]: 'ControlRight',
+            [Control.UPKICK]: 'MajRIGHT',
+
 
         },
     },
@@ -25,6 +30,7 @@ export let controls = [
             [Control.UP]: 'KeyW',
             [Control.DOWN]: 'KeyS',
             [Control.PUNCH]: 'KeyE',
+            [Control.UPKICK]: 'KeyF',
         },
     },
 ];

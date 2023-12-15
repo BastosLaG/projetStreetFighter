@@ -1,5 +1,5 @@
 import { Fighter } from './Fighter.js';
-import { FighterState, PushBox } from '../constants/dfight.js';
+import { FighterState, PushBox, FrameDelay, HurtBox, HitBox} from '../constants/dfight.js';
 
 
 export class Mehdi extends Fighter {
@@ -121,24 +121,24 @@ export class Mehdi extends Fighter {
         ];
 
         this.frames = this.gen_map("entry-", entry);
-        this.frames = this.gen_map("idle-", idle, PushBox.IDLEM);
-        this.frames = this.gen_map("forwardwalk-", forwardwalk,PushBox.WALKFORWARDM);
-        this.frames = this.gen_map("backwardwalk-", backwardwalk, PushBox.WALKBACKWARDM);
+        this.frames = this.gen_map("idle-", idle, PushBox.IDLEM, HurtBox.HURT_IDLEM);
+        this.frames = this.gen_map("forwardwalk-", forwardwalk,PushBox.WALKFORWARDM, HurtBox.HURT_WALKFORWARDM);
+        this.frames = this.gen_map("backwardwalk-", backwardwalk, PushBox.WALKBACKWARDM, HurtBox.HURT_WALKBACKWARDM);
         this.frames = this.gen_map("upkick-", upkick);
-        this.frames = this.gen_map("punch-", punch);
+        this.frames = this.gen_map("punch-", punch, PushBox.IDLEM, HurtBox.HURT_IDLEM, HitBox.PUNCHM);
         this.frames = this.gen_map("lowkick-", lowkick);
-        this.frames = this.gen_map("jump-", jump, PushBox.JUMP);
+        this.frames = this.gen_map("jump-", jump, PushBox.JUMP, HurtBox.HURT_JUMP);
         
 
-        this.animation = this.gen_AnimationObject(FighterState.ENTRY, "entry", 23, 80);
-        this.animation = this.gen_AnimationObject([FighterState.IDLE], "idle", 7, 130);
-        this.animation = this.gen_AnimationObject([FighterState.FORWARDWALK], "forwardwalk", 8, 80);        
-        this.animation = this.gen_AnimationObject([FighterState.BACKWARDWALK], "backwardwalk", 8, 80);
-        this.animation = this.gen_AnimationObject("upkick", "upkick", 11);
-        this.animation = this.gen_AnimationObject("punch", "punch", 5);
-        this.animation = this.gen_AnimationObject("lowkick", "lowkick", 6);
-        this.animation = this.gen_AnimationObject([FighterState.JUMP], "jump", 9, 130);
-        this.animation = this.gen_AnimationObject([FighterState.PUNCH], "punch", 5, 130);
+
+        this.animation = this.gen_AnimationObject(FighterState.ENTRY, "entry", 23, 80, FrameDelay.FREEZE);
+        this.animation = this.gen_AnimationObject([FighterState.IDLE], "idle", 7, 130, FrameDelay.FREEZE);
+        this.animation = this.gen_AnimationObject([FighterState.FORWARDWALK], "forwardwalk", 8, 80, FrameDelay.FREEZE);        
+        this.animation = this.gen_AnimationObject([FighterState.BACKWARDWALK], "backwardwalk", 8, 80, FrameDelay.FREEZE);
+        this.animation = this.gen_AnimationObject([FighterState.UPKICK], "upkick", 11, FrameDelay.FREEZE);
+        this.animation = this.gen_AnimationObject("lowkick", "lowkick", 6, FrameDelay.FREEZE);
+        this.animation = this.gen_AnimationObject([FighterState.JUMP], "jump", 9, 130, FrameDelay.FREEZE);
+        this.animation = this.gen_AnimationObject([FighterState.PUNCH], "punch", 5, 130, FrameDelay.FREEZE);
 
     }
 }
