@@ -1,4 +1,4 @@
-import { FighterDirection, FighterState, FrameDelay, FighterAttackType  } from '../constants/dfight.js';
+import { FighterDirection, FighterState, FrameDelay, FighterAttackType, FighterAttackStrength, FighterAttackBaseData  } from '../constants/dfight.js';
 import { STAGE_FLOOR } from '../constants/stage.js';
 import * as control from './InputHandler.js';
 import { getActualBoxDimensions, rectsOverlap, boxOverlap } from './collision.js';
@@ -13,7 +13,6 @@ export class Fighter {
         this.direction = direction;
         this.gravity = 0;
 
-        
         this.frames = new Map();
         this.animationFrame = 0;
         this.animationtimer = 0;
@@ -62,12 +61,14 @@ export class Fighter {
             },
             [FighterState.PUNCH]: {
                 attackType : FighterAttackType.PUNCH,
+                attackStrength: FighterAttackStrength.LIGHT,
                 init: this.handlePunchInit.bind(this),
                 update: this.handlePunchState.bind(this),
                 validFrom: [ FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK],
             },
             [FighterState.UPKICK]: {
                 attackType : FighterAttackType.KICK,
+                attackStrength: FighterAttackStrength.MEDIUM,
                 init: this.handleUpKickInit.bind(this),
                 update: this.handleUpKickState.bind(this),
                 validFrom: [ FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK],
@@ -417,6 +418,10 @@ export class Fighter {
     
             let hurtIndex = this.opponent.boxes.hurt.indexOf(hurt);
             let hurtName = ['head', 'body', 'feet'];
+            let strength = this.states[this.currentState].attackStrength;
+            
+            this.opponent.hitPoints -= FighterAttackBaseData[strength].damage;
+
             console.log(`${this.name} has hit ${this.opponent.name} in the ${hurtName[hurtIndex]}`);
         }
     }

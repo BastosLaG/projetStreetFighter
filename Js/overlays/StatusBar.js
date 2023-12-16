@@ -1,4 +1,4 @@
-import { TIME_DELAY, TIME_FLASH_DELAY, TIME_FRAME_KEYS } from "../constants/battle.js";
+import { HEALTH_COLOR, HEALTH_DAMAGE_COLOR, HEALTH_MAX_HIT_POINT, TIME_DELAY, TIME_FLASH_DELAY, TIME_FRAME_KEYS } from "../constants/battle.js";
 
 export class StatusBar {
     constructor(fighters) {
@@ -8,6 +8,14 @@ export class StatusBar {
         this.timeTimer = 0;
         this.timeFlashTimer = 0;
         this.useFlashFrames = false;
+
+        this.healthBars = [{
+            timer: 0,
+            hitPoints: HEALTH_MAX_HIT_POINT,
+        }, {
+            timer: 0,
+            hitPoints: HEALTH_MAX_HIT_POINT,
+        }];
 
         this.fighters = fighters;
 
@@ -36,8 +44,6 @@ export class StatusBar {
             [`${TIME_FRAME_KEYS[1]}-7`, [128,32,14,16]],
             [`${TIME_FRAME_KEYS[1]}-8`, [144,32,14,16]],
             [`${TIME_FRAME_KEYS[1]}-9`, [160,32,14,16]],
-
-            // Name tags
             
         ]);
     }
@@ -65,6 +71,13 @@ export class StatusBar {
         }
     }
 
+    updateHealthBars(time){
+        for (let i in this.healthBars){
+            if (this.healthBars[i].hitPoints <= this.fighters[i].hitPoints) continue; 
+            this.healthBars[i].hitPoints = Math.max(0, this.healthBars[i].hitPoints - (time.passed * FPS));
+        }
+    }
+
     update(time){
         this.updateTime(time);
     }
@@ -73,6 +86,18 @@ export class StatusBar {
         this.drawFrame(ctx, 'health-bar', 31, 20);
         this.drawFrame(ctx, 'ko', 176, 18);
         this.drawFrame(ctx, 'health-bar', 353, 20, -1);
+
+        ctx.fillStyle = HEALTH_DAMAGE_COLOR;
+
+        ctx.beginPath();
+        ctx.fillRect(
+            32, 21, 
+            HEALTH_MAX_HIT_POINT - Math.floor(this.healthBars[0].hitPoints), 9,
+        );
+        ctx.fillRect(
+            208 + Math.floor(this.healthBars[1].hitPoints), 21, 
+            HEALTH_MAX_HIT_POINT - Math.floor(this.healthBars[1].hitPoints), 9,
+        );
     }
     
     drawNameTags(ctx){

@@ -7,7 +7,6 @@ export function boxOverlap(box1, box2){
 
 }
 
-
 export function getActualBoxDimensions(position, direction, box){
 
     let x1 = position.x + (box.x * direction);

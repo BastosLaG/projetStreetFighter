@@ -33,6 +33,28 @@ export let FighterAttackType = {
     PUNCH: 'punch',
     KICK: 'kick',
 }
+
+export let FighterAttackStrength = {
+    LIGHT: 'light',
+    MEDIUM: 'medium',
+    HEAVY: 'heavy',
+};
+
+export let FighterAttackBaseData = {
+    [FighterAttackStrength.LIGHT]: {
+        score: 100, 
+        damage: 12,
+    }, 
+    [FighterAttackStrength.MEDIUM]: {
+        score: 300, 
+        damage: 20,
+    },
+    [FighterAttackStrength.LIGHT]: {
+        score: 100, 
+        damage: 28,
+    }
+};
+
 export let PushBox = {
     //Bastien pushbox
 
