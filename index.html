@@ -100,10 +100,19 @@
 
     <div id="settingsOverlay" class="overlay">
         <div class="overlay-content">
-            <h2>Paramètres</h2>
-            <label for="volumeControl">Volume: </label>
+            <img src="assets/menu/Settings.png" alt="Settings" id="settingsImage" height="75">
+            <img src="assets/menu/sound.png" alt="Volume" id="volumeImage" height="35">
             <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.20">
-            <button onclick="closeSettings()">Fermer</button>
+            <button onclick="closeSettings()" id="closeButton">Fermer</button>
+        </div>
+    </div>
+
+    <div id="CreditsOverlay" class="overlay2">
+        <div class="overlay2-content">
+            <a href="https://github.com/BastosLaG"><img src="assets/menu/Bastien.png" alt="Volume" id="" height="100"></a>
+            <a href="https://github.com/LudoRNLT"><img src="assets/menu/Ludo.png" alt="Volume" id="" height="100"></a>
+            <a href="https://github.com/PAxitoo"><img src="assets/menu/Mehdi.png" alt="Volume" id="" height="100"></a>
+            <a href="https://github.com/Sinexo"><img src="assets/menu/Tomas.png" alt="Volume" id="" height="100"></a>
         </div>
     </div>
 
