@@ -75,7 +75,7 @@
         
         <a class="link-wrapper" href="#">
             <span class="fallback">Credits</span>
-            <div class="img-wrapper" is="creditButton">
+            <div class="img-wrapper" id="creditButton">
                 <img class="normal" src="assets/menu/CreditsSF.png">
                 <img class="active" src="assets/menu/CreditsSF.png">
             </div>
@@ -98,12 +98,18 @@
         <img src="assets/menu/Logo.png" alt="Logo" class="logo">
     </div>
 
-    <script>
-        document.getElementById("music").volume = 0.20;
-    </script>
+    <div id="settingsOverlay" class="overlay">
+        <div class="overlay-content">
+            <h2>Paramètres</h2>
+            <label for="volumeControl">Volume: </label>
+            <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.20">
+            <button onclick="closeSettings()">Fermer</button>
+        </div>
+    </div>
 
+    <script src="./Js/menu_buttons.js"></script>
 </body>
-<script type="module" src="./Js/menu_buttons.js"></script>
+
 <script>
     document.getElementById("music").volume = 0.03;
 </script>

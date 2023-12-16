@@ -1,24 +1,37 @@
 
 var click = new Audio('./assets/sound/main_menu/dmc5_button.mp3');
 
+function openSettings() {
+    document.getElementById("settingsOverlay").style.display = "block";
+}
+
+function closeSettings() {
+    document.getElementById("settingsOverlay").style.display = "none";
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById("volumeControl").addEventListener("input", function(e) {
+        var volume = e.target.value;
+        document.getElementById("music").volume = volume;
+    });
+});
 //////*  Start button   *//////
 document.getElementById('startButton').addEventListener('click', function () {
     click.play(); // Jouer l'effet sonore
     setTimeout(function() {
         window.location.assign('game.html');
-    }, 590); // Retarder de 300 millisecondes (ajustez selon vos besoins)
+    }, 550); // Retarder de 300 millisecondes (ajustez selon vos besoins)
 });
 
 //////*  Settings button   *//////
 document.getElementById('settingButton').addEventListener('click', function () {
     click.play(); // Jouer l'effet sonore
-    // Mettre liens vers settings.html
+    openSettings();
 });
 
 //////*  Credits button   *//////
 document.getElementById('creditButton').addEventListener('click', function () {
     click.play(); // Jouer l'effet sonore
-    // Mettre liens vers credits.html
 });
 
 //////*  About buttons   *//////

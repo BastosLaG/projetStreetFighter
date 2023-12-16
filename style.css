@@ -7,6 +7,28 @@ body {
     background-image: url('assets/menu/BG2.gif'); /* Remplace 'background.jpg' par le chemin de ton image de fond */
     background-size: cover;
     background-position: center;
+    cursor: url('assets/menu/cursor.png'),auto;
+}
+
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: none;
+}
+
+.overlay-content {
+  background-color: rgb(255, 0, 0);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
 }
 
 hr {
