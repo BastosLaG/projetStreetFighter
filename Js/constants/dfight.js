@@ -29,6 +29,10 @@ export let FrameDelay = {
     TRANSISTION: -2,    
 }
 
+export let FighterAttackType = {
+    PUNCH: 'punch',
+    KICK: 'kick',
+}
 export let PushBox = {
     //Bastien pushbox
 

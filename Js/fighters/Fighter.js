@@ -1,7 +1,7 @@
-import { FighterDirection, FighterState, FrameDelay  } from '../constants/dfight.js';
+import { FighterDirection, FighterState, FrameDelay, FighterAttackType  } from '../constants/dfight.js';
 import { STAGE_FLOOR } from '../constants/stage.js';
 import * as control from './InputHandler.js';
-import { rectsOverlap } from './collision.js';
+import { getActualBoxDimensions, rectsOverlap, boxOverlap } from './collision.js';
 import { Control } from '../constants/control.js';
 export class Fighter {
     constructor(name, x, y, direction, palyerId) {
@@ -61,11 +61,13 @@ export class Fighter {
 
             },
             [FighterState.PUNCH]: {
+                attackType : FighterAttackType.PUNCH,
                 init: this.handlePunchInit.bind(this),
                 update: this.handlePunchState.bind(this),
                 validFrom: [ FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK],
             },
             [FighterState.UPKICK]: {
+                attackType : FighterAttackType.KICK,
                 init: this.handleUpKickInit.bind(this),
                 update: this.handleUpKickState.bind(this),
                 validFrom: [ FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK],
@@ -151,6 +153,12 @@ export class Fighter {
             [head = [0, 0, 0, 0], body = [0, 0, 0, 0], feet = [0, 0, 0, 0]] =  [],
             [hitX = 0, hitY = 0, hitWidth = 0, hitHeight = 0] = [],
         ] = this.frames.get(frameKey);
+        
+
+        if (this.direction === FighterDirection.LEFT) {
+            pushBox.x = this.position.x - pushBox.width - pushBox.x;
+            hitBox.x = this.position.x - hitBox.width - hitBox.x;
+        }
 
         return {
             push: {x : pushX, y : pushY, width : pushWidth, height : pushHeight},
@@ -236,6 +244,14 @@ export class Fighter {
         if(!control.isForward(this.playerId, this.direction)) this.changeState(FighterState.IDLE);
         if(control.isDown(this.playerId)) this.changeState(FighterState.GUARD);
         if(control.isUp(this.playerId)) this.changeState(FighterState.JUMP);
+
+        if (control.isPunch(this.playerId, Control.PUNCH)) {
+            // Just punch
+            this.changeState(FighterState.PUNCH);
+        } else if (control.isUpKick(this.playerId, Control.UPKICK)) {
+            // Just upkick
+            this.changeState(FighterState.UPKICK);
+        }
     }   
 
 
@@ -243,6 +259,15 @@ export class Fighter {
         if(!control.isBackward(this.playerId, this.direction)) this.changeState(FighterState.IDLE);
         if(control.isDown(this.playerId)) this.changeState(FighterState.GUARD);
         if(control.isUp(this.playerId)) this.changeState(FighterState.JUMP);
+
+
+        if (control.isPunch(this.playerId, Control.PUNCH)) {
+            // Just punch
+            this.changeState(FighterState.PUNCH);
+        } else if (control.isUpKick(this.playerId, Control.UPKICK)) {
+            // Just upkick
+            this.changeState(FighterState.UPKICK);
+        }
     }
     // Jump
     handleJumpState(time) {
@@ -375,24 +400,47 @@ export class Fighter {
         }
     }
 
+    updateAttackBoxCollided(time) {
+        if (!this.states[this.currentState].attackType) return;
+    
+        let actualHitBox = getActualBoxDimensions(this.position, this.direction, this.boxes.hit);
+        
+        for (let hurt of this.opponent.boxes.hurt) {
+            let [x, y, width, height] = hurt;
+            let actualOpponentHurtBox = getActualBoxDimensions(
+                this.opponent.position, 
+                this.opponent.direction, 
+                {x, y, width, height}
+            );
+    
+            if (!boxOverlap(actualHitBox, actualOpponentHurtBox)) continue;
+    
+            let hurtIndex = this.opponent.boxes.hurt.indexOf(hurt);
+            let hurtName = ['head', 'body', 'feet'];
+            console.log(`${this.name} has hit ${this.opponent.name} in the ${hurtName[hurtIndex]}`);
+        }
+    }
+    
+
     drawDebugBox(ctx, dimesions, baseColor){
         if(!Array.isArray(dimesions)) return;
 
         let [x = 0, y = 0, width = 0, height = 0] = dimesions;
 
+
         ctx.beginPath();
         ctx.strokeStyle = baseColor + 'AA';
         ctx.fillStyle = baseColor + '44';
         ctx.fillRect(
-            this.position.x + x, // x
+            this.position.x + x * this.direction , // x
             this.position.y + y, // y
-            width, // width
+            width * this.direction , // width
             height // height
         );
         ctx.rect(
-            this.position.x + x, // x
+            this.position.x + x * this.direction , // x
             this.position.y + y, // y
-            width, // width
+            width * this.direction , // width
             height // height
         );
         ctx.stroke();
@@ -413,11 +461,29 @@ export class Fighter {
 
         // Dessiner le point d'origine pour le débogage
         ctx.beginPath();
+        ctx.beginPath();
         ctx.strokeStyle = 'red';
-        ctx.moveTo(Math.floor(this.position.x) - 4, Math.floor(this.position.y) - 0.5);
-        ctx.lineTo(Math.floor(this.position.x) + 5, Math.floor(this.position.y) - 0.5);
-        ctx.moveTo(Math.floor(this.position.x) + 0.5, Math.floor(this.position.y) - 5);
-        ctx.lineTo(Math.floor(this.position.x) + 0.5, Math.floor(this.position.y) + 4);
+        ctx.moveTo(
+            Math.floor(this.position.x) - 4,
+            Math.floor(this.position.y) - 0.5,
+        );
+
+    
+        ctx.lineTo(
+            Math.floor(this.position.x) + 5,
+            Math.floor(this.position.y) - 0.5,
+        );
+    
+        ctx.moveTo(
+            Math.floor(this.position.x) + 0.5,
+            Math.floor(this.position.y) - 5,
+        );
+
+        ctx.lineTo(
+            Math.floor(this.position.x) + 0.5,
+            Math.floor(this.position.y) + 4,
+        );
+
         ctx.stroke();
     }
     updateCtx(ctx) {
@@ -475,6 +541,7 @@ export class Fighter {
     
         // Mise à jour du contexte (gestion des collisions, limites du canvas, etc.)
         this.updateCtx(ctx);
+        this.updateAttackBoxCollided(time);
     }
     
     
