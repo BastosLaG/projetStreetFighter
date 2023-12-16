@@ -114,8 +114,6 @@ export class Fighter {
             // Just upkick
             this.changeState(FighterState.UPKICK);
         }
-
-
     }
     
     
@@ -175,7 +173,6 @@ export class Fighter {
             return;
         }
 
-    
         this.currentState = newstate;
         this.animationFrame = 0;
         this.states[this.currentState].init();
