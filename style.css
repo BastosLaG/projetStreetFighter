@@ -1,180 +1,193 @@
 body {
-    background: rgb(255, 255, 255);
-    padding-top: 50px;
+  margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100vh;
-    margin: 0;
-    overflow: hidden;
-  }
-  hr {
-    opacity: 0;
-  }
-  .navbar {
-    text-align: center;
-    margin-top: 18px;
-  }
-  .link-wrapper {
-    position: relative;
-    display: inline-block;
-    margin: 0px 16px;
-  
-    .fallback {
-      font-size: 2.25em;
-      letter-spacing: 4px;
-      line-height: 0;
-      opacity: 0;
-      position: relative;
-      top: 15px;
-      left: 0;
-    }
-    .shape-wrapper { 
-      display: none; 
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      width: 100%; /* ou une taille spécifique si nécessaire */
-    height: auto; /* garde le ratio de l'image */
-    }
-    &:hover {
-      z-index: 9999;
-      .shape-wrapper { 
-        transform: rotate(-6deg);
-        display: block; 
-        .shape.cyan-fill {
-          transform: scale(3,.1);
-        }
-      }
-      .img-wrapper {
-        img {
-         animation: tiltBounce .15s ease;
-         animation-fill-mode: forwards;
-         display: block;
-          &.normal {
-             mix-blend-mode: darken;
-          }
-        }
-      }
-    }
-    &:nth-child(even) {
-      &:hover {
-        .shape-wrapper { transform: rotate(11deg) }
-        .img-wrapper img {
-           animation: tiltBounceAlt .15s ease;
-           animation-fill-mode: forwards;
-        }
-      }
-    }
-  }
-  
-  .img-wrapper {
-    img {
-      width: auto;
-      height: 40px;
-      display: block;
-      left: 0;
-      right: 0;
-      top: -5px;
-      margin: 0 auto;
-      position: absolute;
-      z-index: 999;
-      &.normal {
-        display: block;
-      }
-      &.active {
-        display: none;
-        z-index: -1;
-      }
-    }
-  }
-  .shape-wrapper {
-    filter: sepia(50%) saturate(3);
-    width: 100%; /* ou une taille spécifique si nécessaire */
-    height: auto; /* garde le ratio de l'image */
-    .shape {
-      transition: all .1s linear;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 35px;
-      overflow: hidden;
-      svg {
-        position: absolute;
-        left: 0;
-        top: 0;
-      }
-      &.cyan-fill {
-        mix-blend-mode: screen;
-        animation-delay: 0.05s;
-        animation-duration: .4s;
-      }
-      &.red-fill {
-        animation-duration: .45s;
-        animation-delay: 0.08s;
-        opacity: .8;
-      }
+    background-image: url('assets/menu/BG2.gif'); /* Remplace 'background.jpg' par le chemin de ton image de fond */
+    background-size: cover;
+    background-position: center;
+}
 
+hr {
+  opacity: 0;
+}
+.navbar {
+  position: fixed; /* Changé pour un positionnement fixe */
+  bottom: 0; /* Positionné en bas */
+  left: 0; /* Positionné à gauche */
+  text-align: left; /* Alignement à gauche pour les liens */
+}
+.link-wrapper {
+  position: relative;
+  display: block;
+  margin: 64px 16px;
+
+  .fallback {
+    font-size: 2.25em;
+    letter-spacing: 4px;
+    line-height: 0;
+    opacity: 0;
+    position: relative;
+    top: 15px;
+    left: 0;
+  }
+  .shape-wrapper { 
+    display: none; 
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%; /* ou une taille spécifique si nécessaire */
+  height: auto; /* garde le ratio de l'image */
+  }
+  &:hover {
+    z-index: 9999;
+    .shape-wrapper { 
+      transform: rotate(-6deg);
+      display: block; 
+      .shape.cyan-fill {
+        transform: scale(3,.1);
+      }
+    }
+    .img-wrapper {
+      img {
+       animation: tiltBounce .15s ease;
+       animation-fill-mode: forwards;
+       display: block;
+        &.normal {
+           mix-blend-mode: darken;
+        }
+      }
     }
   }
-  
-.jelly {
-    -webkit-animation-name: jelly;
-            animation-name: jelly;
-    -webkit-transform-origin: center;
-            transform-origin: center;
-    -webkit-animation-iteration-count: infinite;
-            animation-iteration-count: infinite;
-    -webkit-animation-timing-function: linear;
-            animation-timing-function: linear;
+  &:nth-child(even) {
+    &:hover {
+      .shape-wrapper { transform: rotate(11deg) }
+      .img-wrapper img {
+         animation: tiltBounceAlt .15s ease;
+         animation-fill-mode: forwards;
+      }
+    }
   }
-  
-  .video {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform: translate(-50%, -50%);
-    z-index: 3;
+}
+
+.container {
+  text-align: center;
+  transform: scale(0.75);
+}
+
+
+.img-wrapper {
+  img {
+    width: auto;
+    height: 40px;
+    display: block;
+    left: 0;
+    right: 0;
+    top: -5px;
+    margin: 0 auto;
+    position: absolute;
+    z-index: 999;
+    transform: scale(1.80);
+    &.normal {
+      display: block;
+    }
+    &.active {
+      display: none;
+      z-index: -1;
+    }
+  }
+}
+.shape-wrapper {
+  filter: sepia(50%) saturate(3);
+  width: 100%; /* ou une taille spécifique si nécessaire */
+  height: auto; /* garde le ratio de l'image */
+  .shape {
+    transition: all .1s linear;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 35px;
+    overflow: hidden;
+    svg {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    &.cyan-fill {
+      mix-blend-mode: screen;
+      animation-delay: 0.05s;
+      animation-duration: .4s;
+    }
+    &.red-fill {
+      animation-duration: .45s;
+      animation-delay: 0.08s;
+      opacity: .8;
+    }
+
+  }
+}
+
+.jelly {
+  -webkit-animation-name: jelly;
+          animation-name: jelly;
+  -webkit-transform-origin: center;
+          transform-origin: center;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+          animation-timing-function: linear;
+}
+
+.video {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  z-index: 3;
 }
 
 .menuButton {
-  font-family: "./assets/font/stf.ttf";
-  font-size: 70px;
-  font-style: normal;
-  cursor: pointer;
-  background-color: transparent;
-  color: rgb(192, 182, 40);
-  border: none;
+font-family: "./assets/font/stf.ttf";
+font-size: 70px;
+font-style: normal;
+cursor: pointer;
+background-color: transparent;
+color: rgb(192, 182, 40);
+border: none;
 }
 
-  @keyframes tiltBounce {
-    0% {
-      transform: scale(1) rotate(-7deg);
-    }
-    50% {
-      transform: scale(1.5) rotate(-7deg);
-    }
-    100% {
-      transform: scale(1.15) rotate(-7deg);
-    }
+@keyframes tiltBounce {
+  0% {
+    transform: scale(1) rotate(-7deg);
   }
-  @keyframes tiltBounceAlt {
-    0% {
-      transform: scale(1) rotate(7deg);
-    }
-    50% {
-      transform: scale(1.5) rotate(7deg);
-    }
-    100% {
-      transform: scale(1.15) rotate(7deg);
-    }
+  50% {
+    transform: scale(1.5) rotate(-7deg);
   }
-  @keyframes jelly {
-    0% {
-      width: 100%; transform: scale(1.25,1) skewX(20deg) translateY(3px) rotateX(40deg) rotateY(10deg) rotateZ(-10deg);
-    }
-    50% { width: 100%; transform: scale(1.25,1.1) skewX(-15deg) translateY(-2px) translateZ(-30px); }
-    100% { width: 100%; transform: scale(1.25,1) skewX(20deg) translateY(3px) rotateX(-40deg) rotateY(-10deg) rotateZ(-15deg); }
+  100% {
+    transform: scale(1.15) rotate(-7deg);
   }
+}
+@keyframes tiltBounceAlt {
+  0% {
+    transform: scale(1) rotate(7deg);
+  }
+  50% {
+    transform: scale(1.5) rotate(7deg);
+  }
+  100% {
+    transform: scale(1.15) rotate(7deg);
+  }
+}
+@keyframes jelly {
+  0% {
+    width: 100%; transform: scale(1.25,1) skewX(20deg) translateY(3px) rotateX(40deg) rotateY(10deg) rotateZ(-10deg);
+  }
+  50% { width: 100%; transform: scale(1.25,1.1) skewX(-15deg) translateY(-2px) translateZ(-30px); }
+  100% { width: 100%; transform: scale(1.25,1) skewX(20deg) translateY(3px) rotateX(-40deg) rotateY(-10deg) rotateZ(-15deg); }
+}
