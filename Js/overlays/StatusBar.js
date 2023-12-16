@@ -1,7 +1,8 @@
 import { HEALTH_COLOR, HEALTH_DAMAGE_COLOR, HEALTH_MAX_HIT_POINT, TIME_DELAY, TIME_FLASH_DELAY, TIME_FRAME_KEYS } from "../constants/battle.js";
+import { gameState } from "../state/gameState.js";
 
 export class StatusBar {
-    constructor(fighters) {
+    constructor() {
         this.image = document.querySelector('img[alt="misc"]');
 
         this.time = 99;
@@ -16,8 +17,6 @@ export class StatusBar {
             timer: 0,
             hitPoints: HEALTH_MAX_HIT_POINT,
         }];
-
-        this.fighters = fighters;
 
         this.frames = new Map([
             ['health-bar', [16,18,145,11]],
@@ -44,19 +43,17 @@ export class StatusBar {
             [`${TIME_FRAME_KEYS[1]}-7`, [128,32,14,16]],
             [`${TIME_FRAME_KEYS[1]}-8`, [144,32,14,16]],
             [`${TIME_FRAME_KEYS[1]}-9`, [160,32,14,16]],
+
+            [`tag-bastien`, [14,68,73,10]],
+            [`tag-mehdi`, [100,68,50,10]],
             
         ]);
+
+        this.names = gameState.fighters.map(({id}) => `tag-${id.toLowerCase()}`);
     }
 
-    drawFrame(ctx, frame, x, y, direction = 1) {
-        const [sourceX, sourceY, sourceWidth, sourceHeight] = this.frames.get(frame)
-        ctx.scale(direction, 1);
-        ctx.drawImage(
-            this.image,
-            sourceX, sourceY, sourceWidth, sourceHeight,
-            x*direction, y, sourceWidth, sourceHeight,
-        );
-        ctx.setTransform(1,0,0,1,0,0);
+    drawFrame(ctx, frameKey, x, y, direction = 1) {
+        drawFrame(ctx, this.image, this.frames.get(frameKey), x, y, direction);
     }
 
     updateTime(time){
@@ -101,7 +98,10 @@ export class StatusBar {
     }
     
     drawNameTags(ctx){
+        let [name1, name2] = this.names;
 
+        this.drawFrame(ctx, name1, 32, 33);
+        this.drawFrame(ctx, name2, 322, 33);
     }
 
     drawTime(ctx){

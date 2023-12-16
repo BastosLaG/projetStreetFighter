@@ -10,15 +10,10 @@ export class Stage {
         // ]);
     }
 
-    update() { }
+    // update() { }
 
-    // drawFrame(ctx, frame, x, y) {
-    //     const [sourceX, sourceY, sourceWidth, sourceHeight] = this.frames.get(frame)
-    //     ctx.drawImage(
-    //         this.image,
-    //         sourceX, sourceY, sourceWidth, sourceHeight ,
-    //         x, y, sourceWidth, sourceHeight*0.75,
-    //     );
+    // drawFrame(ctx, frameKey, x, y) {
+    //     drawFrame(ctx, this.image, this.frames.get(frameKey), x, y, direction);
     // }
 
     draw(ctx, camera){

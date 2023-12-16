@@ -1,37 +1,14 @@
-import { Bastien } from './fighters/Bastien.js';
-import { Mehdi } from './fighters/Mehdi.js';
-import { Stage } from './gestions/Stage.js';
-import { FpsCounter } from './gestions/FpsCounter.js';
-import { FIGHTER_START_DISTANCE, FighterDirection } from './constants/dfight.js';
-import { STAGE_FLOOR, STAGE_MID_POINT, STAGE_PADDING } from './constants/stage.js';
 import { registerKeyboardEvents } from './fighters/InputHandler.js';
-import { StatusBar } from './overlays/StatusBar.js';
-import { Camera } from './camera.js';
-
+import { BattleScene } from './scenes/BattleScene.js';
 
 export class StreetFighterGame { 
+    ctx = this.getContext();
+    frames_time = {
+        passed: 0,
+        delta: 0,
+    };
     constructor() {
-        this.ctx = this.getContext();
-        this.fighters = [
-            new Bastien(100, STAGE_FLOOR, FighterDirection.RIGHT, 1),
-            new Mehdi(300, STAGE_FLOOR, FighterDirection.LEFT, 0),
-        ];
-
-        this.fighters[1].opponent = this.fighters[0];
-        this.fighters[0].opponent = this.fighters[1];
-
-        this.camera = new Camera(STAGE_MID_POINT + STAGE_PADDING - (this.ctx.canvas.width / 2), 16, this.fighters);
-
-        this.objets = [
-            new Stage("./assets/Background.jpg"),
-            ...this.fighters,
-            new FpsCounter(),
-            new StatusBar(this.fighters),
-        ];
-        this.frames_time = {
-            passed: 0,
-            delta: 0,
-        };
+        this.scene = new BattleScene();
     }
     
     getContext(){
@@ -41,17 +18,6 @@ export class StreetFighterGame {
         return ctx;
     }
 
-    update(){
-        this.camera.update(this.frames_time, this.ctx);
-        for(let objet of this.objets){
-            objet.update(this.frames_time, this.ctx, this.camera);
-        }
-    }
-    draw(){
-        for (let objet of this.objets) {
-            objet.draw(this.ctx, this.camera);
-        }
-    }
     // Fonction de la boucle de jeu, appelée à chaque frame.
     frame(time) {
         window.requestAnimationFrame(this.frame.bind(this));
@@ -60,8 +26,8 @@ export class StreetFighterGame {
             delta: (time - this.frames_time.passed) / 1000,
             passed: time,
         }
-        this.update();
-        this.draw(); 
+        this.scene.update(this.frames_time, this.ctx);
+        this.scene.draw(this.ctx); 
     }
 
     start() {

@@ -3,9 +3,9 @@ import { STAGE_FLOOR } from '../constants/stage.js';
 import * as control from './InputHandler.js';
 import { getActualBoxDimensions, rectsOverlap, boxOverlap } from './collision.js';
 import { Control } from '../constants/control.js';
+import { gameState } from '../state/gameState.js';
 export class Fighter {
-    constructor(name, x, y, direction, palyerId) {
-        this.name = name;
+    constructor(x, y, direction, palyerId) {
         this.playerId = palyerId;
         this.position = { x, y };
         this.velocity = { x: 0, y: 0 };
@@ -422,7 +422,7 @@ export class Fighter {
             
             this.opponent.hitPoints -= FighterAttackBaseData[strength].damage;
 
-            console.log(`${this.name} has hit ${this.opponent.name} in the ${hurtName[hurtIndex]}`);
+            console.log(`${gameState.fighters[this.playerId].id} has hit ${gameState.fighters[this.opponent.playerId].id} in the ${hurtName[hurtIndex]}`);
         }
     }
     

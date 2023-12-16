@@ -6,6 +6,11 @@ export let FighterDirection = {
     RIGHT: 1,
 };
 
+export let FighterId = {
+    BASTIEN: 'Bastien',
+    MEHDI: 'Mehdi',
+};
+
 export let FighterState = {
     IDLE: 'idle',
     FORWARDWALK: 'forwardwalk',
