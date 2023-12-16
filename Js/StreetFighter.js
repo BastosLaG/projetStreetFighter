@@ -8,7 +8,6 @@ import { registerKeyboardEvents } from './fighters/InputHandler.js';
 import { StatusBar } from './overlays/StatusBar.js';
 import { Camera } from './camera.js';
 
-
 export class StreetFighterGame { 
     constructor() {
         this.ctx = this.getContext();

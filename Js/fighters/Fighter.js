@@ -188,14 +188,6 @@ export class Fighter {
     handleJumpInit(){
         this.velocity.y = this.initialVelocity.jump;
 
-        if (isMovingForward) {
-            // Just moving forward
-            this.changeState(FighterState.FORWARDWALK);
-        } else if (isMovingBackward) {
-            // Just moving backward
-            this.changeState(FighterState.BACKWARDWALK);
-        }
-    
     }
     
     // Move
@@ -546,7 +538,22 @@ export class Fighter {
             [originX, originY],
             // Si vous avez besoin du troisième tableau, déstructurez-le ici
         ] = frameData;
-        
+        // Configuration et dessin de l'ombre
+        let shadowScale = Math.max(0.2, 1 - (STAGE_FLOOR - this.position.y) / 100);
+        let shadowWidth = this.boxes.push.width * 0.95 * shadowScale;
+        let shadowHeight = 5 * shadowScale; // Hauteur fixe pour l'ombre, scaled
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'; // Couleur de l'ombre
+        ctx.beginPath();
+        ctx.ellipse(
+            this.position.x - 10 * this.direction, 
+            STAGE_FLOOR , // Position Y ajustée au sol
+            shadowWidth, 
+            shadowHeight, 
+            0, 
+            0, 
+            Math.PI * 2
+        );
+        ctx.fill();
         ctx.save(); // Sauvegarde l'état actuel du contexte
         ctx.translate(Math.floor(this.position.x), Math.floor(this.position.y));
         ctx.scale(this.direction, 1);
@@ -557,6 +564,7 @@ export class Fighter {
             -originX - 20, -originY - 20, 
             width + 20, height +20
         );
+        
         ctx.restore(); // Restaure l'état précédent du contexte
         
         this.draw_debug(ctx);
