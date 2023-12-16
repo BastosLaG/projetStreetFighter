@@ -10,15 +10,16 @@ export class Camera {
         // Update Y position
         this.position.y = -6 + Math.floor(Math.min(this.fighters[1].position.y, this.fighters[0].position.y) / 10);
 
+        // -------------------TEST PARALLAX CA MARCHE PAAAAAAAAAAAAAAAAAAAAAAAS !!!!!-------------------
         // Update X position
-        let lowX = Math.min(this.fighters[1].position.x, this.fighters[0].position.x);
-        let highX = Math.max(this.fighters[1].position.x, this.fighters[0].position.x);
+        // let lowX = Math.min(this.fighters[1].position.x, this.fighters[0].position.x);
+        // let highX = Math.max(this.fighters[1].position.x, this.fighters[0].position.x);
 
-        if (highX - lowX > ctx.canvas.width - SCROLL_BOUNDRY * 2) {
-            this.centerCameraOnMidpoint(lowX, highX, ctx.canvas.width);
-        } else {
-            this.scrollCameraWithFighters(time.passed, ctx.canvas.width);
-        }
+        // if (highX - lowX > ctx.canvas.width - SCROLL_BOUNDRY * 2) {
+        //     this.centerCameraOnMidpoint(lowX, highX, ctx.canvas.width);
+        // } else {
+        //     this.scrollCameraWithFighters(time.passed, ctx.canvas.width);
+        // }
     }
 
     centerCameraOnMidpoint(lowX, highX, canvasWidth) {

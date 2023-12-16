@@ -1,44 +1,14 @@
-import { Bastien } from './fighters/Bastien.js';
-import { Ludovic } from './fighters/Ludovic.js';
-import { Mehdi } from './fighters/Mehdi.js';
-import { Tomas } from './fighters/Tomas.js';
-import { Stage } from './gestions/Stage.js';
-import { FpsCounter } from './gestions/FpsCounter.js';
-import { FighterDirection, FighterState } from './constants/dfight.js';
-import { STAGE_FLOOR } from './constants/stage.js';
 import { registerKeyboardEvents } from './fighters/InputHandler.js';
-
+import { BattleScene } from './scenes/BattleScene.js';
 
 export class StreetFighterGame { 
+    ctx = this.getContext();
+    frames_time = {
+        passed: 0,
+        delta: 0,
+    };
     constructor() {
-        this.ctx = this.getContext();
-        this.fighters = [
-<<<<<<< Updated upstream
-            new Mehdi(300, STAGE_FLOOR, FighterDirection.LEFT, 0),
-            new Bastien(100, STAGE_FLOOR, FighterDirection.RIGHT, 1),
-=======
-            new Bastien(104, STAGE_FLOOR, FighterDirection.RIGHT, 1),
-            new Mehdi(280, STAGE_FLOOR, FighterDirection.LEFT, 0),
->>>>>>> Stashed changes
-        ];
-
-        this.fighters[0].opponent = this.fighters[1];
-<<<<<<< Updated upstream
-        this.fighters[1].opponent = this.fighters[0];
-=======
-
-        this.camera = new Camera(448, 16, this.fighters);
->>>>>>> Stashed changes
-
-        this.objets = [
-            new Stage("./assets/Background.jpg"),
-            ...this.fighters,
-            new FpsCounter(),
-        ];
-        this.frames_time = {
-            passed: 0,
-            delta: 0,
-        };
+        this.scene = new BattleScene();
     }
     
     getContext(){
@@ -48,26 +18,16 @@ export class StreetFighterGame {
         return ctx;
     }
 
-    update(){
-        for(let objet of this.objets){
-            objet.update(this.frames_time, this.ctx);
-        }
-    }
-    draw(){
-        for (let objet of this.objets) {
-            objet.draw(this.ctx);
-        }
-    }
     // Fonction de la boucle de jeu, appelée à chaque frame.
     frame(time) {
         window.requestAnimationFrame(this.frame.bind(this));
-
+        
         this.frames_time = {
             delta: (time - this.frames_time.passed) / 1000,
             passed: time,
         }
-        this.update();
-        this.draw(); 
+        this.scene.update(this.frames_time, this.ctx);
+        this.scene.draw(this.ctx); 
     }
 
     start() {

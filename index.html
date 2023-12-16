@@ -1,65 +1,110 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Univ-Fighter</title>
-        <style>
-            body{
-                background-color: black;
-            }
 
-            #buttonContainer {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: transparent;
-                text-align: center;
-                z-index: 3;
-            }
-            .menuButton {
-                display: block;
-                margin: 40px auto;
-                font-family: "./assets/font/stf.ttf";
-                font-size: 70px;
-                font-style: normal;
-                cursor: pointer;
-                background-color: transparent;
-                color: rgb(192, 182, 40);
-                border: none;
-                animation: menu_button;
-                animation-duration: 25s;
-                animation-iteration-count: 1;
-                animation-fill-mode: forwards;
-            }
-            .video {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                transform: translate(-50%, -50%);
-                z-index: 3;
-            }
-        </style>
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>Univ-Fighter</title>
+</head>
 
-        <audio autoplay loop id="music"><source src='./assets/sound/main_menu/SmelloftheGame.mp3' type="audio/mpeg"></audio>
-        <script>document.getElementById("music").volume = 0.20;</script>
-        <video id="intro" class=video autoplay muted> <source src="./assets/sound/main_menu/introggst.mp4" type="video/mp4"> </video>
-        <div id="buttonContainer">
-            <button class="menuButton" id="startButton">Start</a></button>
-            <button class="menuButton" id="creditButton">Demo</button>
-            <button class="menuButton" id="settingButton">Settings</button>
-            <button class="menuButton" id="creditButton">Credit</button>
-        </div>
-        <script type="module" src="./Js/menu_buttons.js"></script>
+<body>
+    <audio autoplay loop id="music">
+        <source src='./assets/sound/main_menu/SmelloftheGame.mp3' type="audio/mpeg">
+    </audio>
+
+    <div class="navbar">
+        <a class="link-wrapper" href="#" id="startButton">
+            <span class="fallback">Start</span>
+            <div class="img-wrapper">
+                <img class="normal" src="assets/menu/StartSF.png">
+                <img class="active" src="assets/menu/StartSF.png">
+            </div>
+            <div class="shape-wrapper">
+                <div class="shape red-fill jelly">
+                    <svg x="0px" y="0px" viewBox="0 0 108.1 47" enable-background="new 0 0 108.1 47">
+                        <polygon fill="#FF0000" points="29.5,8.5 150.7,0 108.1,32.7 3.1,47 "/>
+                    </svg>
+                </div>
+                <div class="shape cyan-fill jelly">
+                    <svg x="0px" y="0px" viewBox="0 0 108.1 47" enable-background="new 0 0 108.1 47">
+                        <polygon fill="#00FFFF" points="0.3,17 125.1,0 68.8,45.6 24.3,39 "/>
+                    </svg>
+                </div>
+            </div>
+        </a>
+
+        <a class="link-wrapper" href="#">
+            <span class="fallback">Demo</span>
+            <div class="img-wrapper">
+                <img class="normal" src="assets/menu/demoSF.png">
+                <img class="active" src="assets/menu/demoSF.png">
+            </div>
+            <div class="shape-wrapper">
+                <div class="shape red-fill jelly">
+                    <svg x="0px" y="0px" viewBox="0 0 108.1 47" enable-background="new 0 0 108.1 47">
+                        <polygon fill="#FF0000" points="0,7.1 127.3,0 32.3,64 4.8,58.2">
+                    </svg>
+                </div>
+                <div class="shape cyan-fill jelly">
+                    <svg x="0px" y="0px" viewBox="0 0 108.1 47" enable-background="new 0 0 108.1 47">
+                        <polygon fill="#00FFFF" points="14,0.5 127.4,0 77.4,164 2.3,61.1 "/>
+                    </svg>
+                </div>
+            </div>
+        </a>
+
+        <a class="link-wrapper" href="#">
+            <span class="fallback">Settings</span>
+            <div class="img-wrapper" id="settingButton">
+                <img class="normal" src="assets/menu/Settings.png">
+                <img class="active" src="assets/menu/Settings.png">
+            </div>
+            <div class="shape-wrapper">
+                <div class="shape red-fill jelly">
+                    <svg x="0px" y="0px" viewBox="0 0 108.1 47" enable-background="new 0 0 108.1 47">
+                        <polygon fill="#FF0000" points="15.5,0 70.7,0 118.1,32.7 43.1,47 "/>
+                    </svg>
+                </div>
+                <div class="shape cyan-fill jelly">
+                    <svg x="0px" y="0px" viewBox="0 0 108.1 47" enable-background="new 0 0 108.1 47">
+                        <polygon fill="#00FFFF" points="17.3,0 105.1,0 68.8,45.6 24.3,39 "/>
+                    </svg>
+                </div>
+            </div>
+        </a>
         
-        <audio autoplay loop id="music"><source src='./assets/sound/main_menu/SmelloftheGame.mp3' type="audio/mpeg"></audio>
-        <script>document.getElementById("music").volume = 0.20;</script>
-        <video id="intro" class=video autoplay muted> <source src="./assets/sound/main_menu/introggst.mp4" type="video/mp4"> </video>
-        <script type="module" src="./Js/menu_buttons.js"></script>
-    </body>
+        <a class="link-wrapper" href="#">
+            <span class="fallback">Credits</span>
+            <div class="img-wrapper" is="creditButton">
+                <img class="normal" src="assets/menu/CreditsSF.png">
+                <img class="active" src="assets/menu/CreditsSF.png">
+            </div>
+            <div class="shape-wrapper">
+                <div class="shape red-fill jelly">
+                    <svg x="0px" y="0px" viewBox="0 0 108.1 47" enable-background="new 0 0 108.1 47">
+                        <polygon fill="#FF0000" points="19.5,0,110.7,0,80.1,32.7,3.1,47 "/>
+                    </svg>
+                </div>
+                <div class="shape cyan-fill jelly">
+                    <svg x="0px" y="0px" viewBox="0 0 108.1 47" enable-background="new 0 0 108.1 47">
+                        <polygon fill="#00FFFF" points="11,3,85.1,0 118.8,45.6,14.3,29 "/>
+                    </svg>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="container">
+        <img src="assets/menu/Logo.png" alt="Logo" class="logo">
+    </div>
+
+    <script>
+        document.getElementById("music").volume = 0.20;
+    </script>
+
+</body>
+<script type="module" src="./Js/menu_buttons.js"></script>
+<script>
+    document.getElementById("music").volume = 0.03;
+</script>
 </html>

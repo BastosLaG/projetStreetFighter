@@ -1,12 +1,11 @@
-import { FighterDirection, FighterState } from '../constants/dfight.js';
+import { FighterDirection, FighterState, FrameDelay, FighterAttackType, FighterAttackStrength, FighterAttackBaseData  } from '../constants/dfight.js';
 import { STAGE_FLOOR } from '../constants/stage.js';
 import * as control from './InputHandler.js';
-import { rectsOverlap } from './collision.js';
-
-
+import { getActualBoxDimensions, rectsOverlap, boxOverlap } from './collision.js';
+import { Control } from '../constants/control.js';
+import { gameState } from '../state/gameState.js';
 export class Fighter {
-    constructor(name, x, y, direction, palyerId) {
-        this.name = name;
+    constructor(x, y, direction, palyerId) {
         this.playerId = palyerId;
         this.position = { x, y };
         this.velocity = { x: 0, y: 0 };
@@ -23,7 +22,11 @@ export class Fighter {
         
         this.opponent; 
 
-        this.pushBox = { x: 0, y: 0, width: 0, height: 0 };
+        this.boxes = { 
+            push: {x: 0, y: 0, width: 0, height: 0 },
+            hurt: [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+            hit: {x: 0, y: 0, width: 0, height: 0 },
+        };
 
         this.states = {     
             [FighterState.IDLE]: {
@@ -31,83 +34,110 @@ export class Fighter {
                 update: this.handleIdleState.bind(this),
                 validFrom: [ 
                     undefined, 
-                    FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK, FighterState.JUMP, 
-                ],
+                    FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK, FighterState.JUMP, FighterState.GUARD, FighterState.PUNCH, FighterState.UPKICK],
+ 
             },
             [FighterState.FORWARDWALK]: {   
                 init: this.handleMoveInit.bind(this),
                 update: this.handleWalkForwadeState.bind(this),
-                validFrom: [
-                    FighterState.IDLE,FighterState.FORWARDWALK, 
-                ],
+                validFrom: [ FighterState.IDLE,FighterState.FORWARDWALK],
             },
             [FighterState.BACKWARDWALK]: {
                 init: this.handleMoveInit.bind(this),
                 update: this.handleWalkBackwardState.bind(this),
-                validFrom: [ 
-                    FighterState.IDLE, FighterState.BACKWARDWALK, 
-                ],
+                validFrom: [ FighterState.IDLE, FighterState.BACKWARDWALK ],
             },  
             [FighterState.JUMP]: {
                 init: this.handleJumpInit.bind(this),
                 update: this.handleJumpState.bind(this),
-                validFrom: [ FighterState.IDLE ],
+                validFrom: [ FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK],
+
             },
             [FighterState.GUARD]: {
                 init: this.handleGuardInit.bind(this),
                 update: this.handleGuardInitialState.bind(this),
-                validFrom: [ FighterState.IDLE ],
-            },      
+                validFrom: [ FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK],
+
+            },
+            [FighterState.PUNCH]: {
+                attackType : FighterAttackType.PUNCH,
+                attackStrength: FighterAttackStrength.LIGHT,
+                init: this.handlePunchInit.bind(this),
+                update: this.handlePunchState.bind(this),
+                validFrom: [ FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK],
+            },
+            [FighterState.UPKICK]: {
+                attackType : FighterAttackType.KICK,
+                attackStrength: FighterAttackStrength.MEDIUM,
+                init: this.handleUpKickInit.bind(this),
+                update: this.handleUpKickState.bind(this),
+                validFrom: [ FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK],
+            },
+
+            
+
         }
         this.changeState(FighterState.IDLE);
     }
 
+
+    isAnimationCompleted = () => this.animations[this.currentState][this.animationFrame][1] === FrameDelay.TRANSITION;
+
+
     handleIdleState() {
-        // Gestion du saut avec direction
-        if(control.isUp(this.playerId, this.direction)) {
-            if(control.isForward(this.playerId, this.direction)) {
-                // Saut en avant
-                this.changeState(FighterState.JUMPFORWARD);
-            } else if(control.isBackward(this.playerId, this.direction)) {
-                // Saut en arrière
-                this.changeState(FighterState.JUMPBACKWARD);
-            } else {
-                // Saut vertical
-                this.changeState(FighterState.JUMP);
-            }
-        }
-        // Gestion de la marche en avant
-        else if(control.isForward(this.playerId, this.direction)) {
+        let isJumping = control.isUp(this.playerId);
+        let isMovingForward = control.isForward(this.playerId, this.direction);
+        let isMovingBackward = control.isBackward(this.playerId, this.direction);
+    
+        if (isJumping && isMovingForward) {
+            // Combine jumping and moving forward
+            this.changeState(FighterState.JUMPFORWARD);
+        } else if (isJumping && isMovingBackward) {
+            // Combine jumping and moving backward
+            this.changeState(FighterState.JUMPBACKWARD);
+        } else if (isJumping) {
+            // Just jumping
+            this.changeState(FighterState.JUMP);
+        } else if (isMovingForward) {
+            // Just moving forward
             this.changeState(FighterState.FORWARDWALK);
-        }
-        // Gestion de la marche en arrière
-        else if(control.isBackward(this.playerId, this.direction)) {
+        } else if (isMovingBackward) {
+            // Just moving backward
             this.changeState(FighterState.BACKWARDWALK);
+        } else if (control.isDown(this.playerId)) {
+            // Just guard
+            this.changeState(FighterState.GUARD);
+        } else if (control.isPunch(this.playerId, Control.PUNCH)) {
+            // Just punch
+            this.changeState(FighterState.PUNCH);
+        } else if (control.isUpKick(this.playerId, Control.UPKICK)) {
+            // Just upkick
+            this.changeState(FighterState.UPKICK);
         }
     }
-
+    
     
     
     hasCollideWithOpponent = () => rectsOverlap(
-        this.position.x + this.pushBox.x, this.position.y + this.pushBox.y,
-        this.pushBox.width, this.pushBox.height,
-        this.opponent.position.x + this.opponent.pushBox.x, 
-        this.opponent.position.y + this.opponent.pushBox.y,
-        this.opponent.pushBox.width, this.opponent.pushBox.height,
+        this.position.x + this.boxes.push.x, this.position.y + this.boxes.push.y,
+        this.boxes.push.width, this.boxes.push.height,
+        this.opponent.position.x + this.opponent.boxes.push.x, 
+        this.opponent.position.y + this.opponent.boxes.push.y,
+        this.opponent.boxes.push.width, this.opponent.boxes.push.height,
     );
     
     getDirection() {
         // Vérifie si le personnage est à gauche de l'opposant
         if (
-            this.position.x + this.pushBox.x + this.pushBox.width 
-            <= this.opponent.position.x  + this.opponent.pushBox.x
+            this.position.x + this.boxes.push.x + this.boxes.push.width 
+            <= this.opponent.position.x  + this.opponent.boxes.push.x
         ) {
             return FighterDirection.RIGHT;
         }
         // Vérifie si le personnage est à droite de l'opposant
         else if (
-            this.position.x + this.pushBox.x
-            >= this.opponent.position.x + this.opponent.pushBox.x + this.opponent.pushBox.width
+            this.position.x + this.boxes.push.x
+            >= this.opponent.position.x + this.opponent.boxes.push.x + this.opponent.boxes.push.width
         ) {
             return FighterDirection.LEFT;
         }
@@ -116,20 +146,38 @@ export class Fighter {
     }
     
 
-    getPushBox(frameKey){
-        let [, [x, y, width, height] = [0, 0, 0, 0]] = this.frames.get(frameKey);
+    getBoxes(frameKey){
+        let [, 
+            [pushX = 0, pushY = 0, pushWidth = 0, pushHeight = 0] = [],
+            [head = [0, 0, 0, 0], body = [0, 0, 0, 0], feet = [0, 0, 0, 0]] =  [],
+            [hitX = 0, hitY = 0, hitWidth = 0, hitHeight = 0] = [],
+        ] = this.frames.get(frameKey);
+        
 
-        return {x, y, width, height};
+        if (this.direction === FighterDirection.LEFT) {
+            pushBox.x = this.position.x - pushBox.width - pushBox.x;
+            hitBox.x = this.position.x - hitBox.width - hitBox.x;
+        }
+
+        return {
+            push: {x : pushX, y : pushY, width : pushWidth, height : pushHeight},
+            hurt: [head, body, feet],
+            hit: {x : hitX, y : hitY, width : hitWidth, height : hitHeight},
+        };
     }
 
-    changeState(newstate){
-        if(newstate === this.currentState
-             || !this.states[newstate].validFrom.includes(this.currentState)) return;
+    changeState(newstate) {
+        // Vérifie si le nouvel état existe et si la transition est valide
+        if (!this.states[newstate] || !this.states[newstate].validFrom.includes(this.currentState)) {
+            console.error(`Invalid state transition from ${this.currentState} to ${newstate}`);
+            return;
+        }
 
         this.currentState = newstate;
         this.animationFrame = 0;
         this.states[this.currentState].init();
     }
+    
 
     
     // Idle
@@ -139,7 +187,7 @@ export class Fighter {
     }
     // Jump
     handleJumpInit(){
-        this.velocity.y = 0;
+        this.velocity.y = this.initialVelocity.jump;
     
         // Déterminer la direction du saut en fonction des entrées du joueur
         if (control.isForward(this.playerId, this.direction)) {
@@ -160,8 +208,23 @@ export class Fighter {
     }
     
     // Guard
-    handleGuardInit(){
+
+    handleGuardInit() { 
         this.velocity.x = 0;
+
+    }
+
+
+    handlePunchInit() {
+        this.handleIdleInit();
+        this.boxes.hit = { x: 0, y: 0, width: 0, height: 0 }; // Désactiver la hitbox
+    }
+    
+
+    handleUpKickInit() {
+        this.handleIdleInit();
+        this.boxes.hit = { x: 0, y: 0, width: 0, height: 0 }; // Désactiver la hitbox
+
     }
 
     // Idle
@@ -171,22 +234,38 @@ export class Fighter {
             this.position.y = STAGE_FLOOR;
             this.changeState(FighterState.IDLE);
         }
-    
-        // Maintenir le mouvement horizontal pendant le saut
-        if (control.isForward(this.playerId, this.direction)) {
-            this.velocity.x = this.initialVelocity.jumpForward;
-        } else if (control.isBackward(this.playerId, this.direction)) {
-            this.velocity.x = -this.initialVelocity.jumpBackward;
-        }
+
     }
     
 
     handleWalkForwadeState() {
         if(!control.isForward(this.playerId, this.direction)) this.changeState(FighterState.IDLE);
-    }
+        if(control.isDown(this.playerId)) this.changeState(FighterState.GUARD);
+        if(control.isUp(this.playerId)) this.changeState(FighterState.JUMP);
+
+        if (control.isPunch(this.playerId, Control.PUNCH)) {
+            // Just punch
+            this.changeState(FighterState.PUNCH);
+        } else if (control.isUpKick(this.playerId, Control.UPKICK)) {
+            // Just upkick
+            this.changeState(FighterState.UPKICK);
+        }
+    }   
+
 
     handleWalkBackwardState() {
         if(!control.isBackward(this.playerId, this.direction)) this.changeState(FighterState.IDLE);
+        if(control.isDown(this.playerId)) this.changeState(FighterState.GUARD);
+        if(control.isUp(this.playerId)) this.changeState(FighterState.JUMP);
+
+
+        if (control.isPunch(this.playerId, Control.PUNCH)) {
+            // Just punch
+            this.changeState(FighterState.PUNCH);
+        } else if (control.isUpKick(this.playerId, Control.UPKICK)) {
+            // Just upkick
+            this.changeState(FighterState.UPKICK);
+        }
     }
     // Jump
     handleJumpState(time) {
@@ -199,21 +278,59 @@ export class Fighter {
 
     // Move
     handleMoveState() {}
-    // Guard
-    handleGuardInitialState() {
-        if(!control.isDown(this.playerId, this.direction)) this.changeState(FighterState.IDLE);
 
+    handleGuardInitialState() {
+        if (!control.isDown(this.playerId, this.direction)) {
+            this.changeState(FighterState.IDLE);
+        }
     }
     
+
+    handlePunchState() {    
+        if (this.animationFrame === 2) {
+            if (this.hasCollideWithOpponent()) {
+                this.opponent.changeState(FighterState.HIT);
+            }
+        }
+        if (this.animationFrame === 4) {
+            this.boxes.hit = { x: 0, y: 0, width: 0, height: 0 }; // Désactiver la hitbox
+            this.changeState(FighterState.IDLE);
+        }
+    }
     
-    gen_map(text, listePosition, pushBox = null) {
+    handleUpKickState() {
+        if (this.animationFrame === 2) {
+            if (this.hasCollideWithOpponent()) {
+                this.opponent.changeState(FighterState.HIT);
+            }
+        }
+        if (this.animationFrame === 4) {
+            this.boxes.hit = { x: 0, y: 0, width: 0, height: 0 }; // Désactiver la hitbox
+
+            this.changeState(FighterState.IDLE);
+        }
+    }
+
+    
+
+    
+    
+    gen_map(text, listePosition, pushBox = null, hurtBox = null, hitBox = null) {
         for (let i = 1; i-1 < listePosition.length; i++){
             let frameData = [listePosition[i-1], [listePosition[i-1][2]/2, listePosition[i-1][3]]];
             if (pushBox) {
                 frameData.push(pushBox); 
             }
+            if (hurtBox) {
+                frameData.push(hurtBox);
+            }
+
+            if (hitBox) {
+                frameData.push(hitBox);
+            }
             this.frames.set(text + i, frameData);
         }
+        
         return this.frames;
     }
     
@@ -227,54 +344,155 @@ export class Fighter {
     
     updateAnimation(time) {
         let animation = this.animations[this.currentState];
+        if (!animation) {
+            console.error(`Animation not found for state: ${this.currentState}`);
+            return;
+        }
+
         let [frameKey, frameDelay] = animation[this.animationFrame];
+        
         if (time.passed > this.animationtimer + frameDelay) {
             this.animationtimer = time.passed;
     
-            if (frameDelay > 0) {
+            if (frameDelay > FrameDelay.FREEZE) {
                 this.animationFrame++;
                 let frameData = this.frames.get(frameKey);
                 if (frameData && frameData.length > 2) { // Vérifier si les données de pushbox existent
                     // Mettre à jour la pushbox avec les données correctes
-                    this.pushBox = {
+                    this.boxes.push = {
                         x: frameData[2][0],
                         y: frameData[2][1],
                         width: frameData[2][2],
                         height: frameData[2][3]
                     };
                 }
+
+                    
+                // Mettre à jour la hurtbox avec les données correctes
+                if (frameData && frameData.length > 3 && Array.isArray(frameData[3])) {
+                    // Mettre à jour la hurtbox avec les données correctes
+                    this.boxes.hurt = [];
+                    for (let i = 0; i < frameData[3].length; i++) {
+                        this.boxes.hurt.push([
+                            frameData[3][i][0],
+                            frameData[3][i][1],
+                            frameData[3][i][2],
+                            frameData[3][i][3]
+                        ]);
+                    }          
+                }
+                // Mettre à jour la hitbox avec les données correctes
+                if (frameData && frameData.length > 4) {
+                    // Mettre à jour la hitbox avec les données correctes
+                    this.boxes.hit = {
+                        x: frameData[4][0],
+                        y: frameData[4][1],
+                        width: frameData[4][2],
+                        height: frameData[4][3]
+                    };
+                }   
             }
             if (this.animationFrame >= animation.length) {
                 this.animationFrame = 0;
             }
         }
     }
+
+    updateAttackBoxCollided(time) {
+        if (!this.states[this.currentState].attackType) return;
+    
+        let actualHitBox = getActualBoxDimensions(this.position, this.direction, this.boxes.hit);
+        
+        for (let hurt of this.opponent.boxes.hurt) {
+            let [x, y, width, height] = hurt;
+            let actualOpponentHurtBox = getActualBoxDimensions(
+                this.opponent.position, 
+                this.opponent.direction, 
+                {x, y, width, height}
+            );
+    
+            if (!boxOverlap(actualHitBox, actualOpponentHurtBox)) continue;
+    
+            let hurtIndex = this.opponent.boxes.hurt.indexOf(hurt);
+            let hurtName = ['head', 'body', 'feet'];
+            let strength = this.states[this.currentState].attackStrength;
+            
+            this.opponent.hitPoints -= FighterAttackBaseData[strength].damage;
+
+            console.log(`${gameState.fighters[this.playerId].id} has hit ${gameState.fighters[this.opponent.playerId].id} in the ${hurtName[hurtIndex]}`);
+        }
+    }
+    
+
+    drawDebugBox(ctx, dimesions, baseColor){
+        if(!Array.isArray(dimesions)) return;
+
+        let [x = 0, y = 0, width = 0, height = 0] = dimesions;
+
+
+        ctx.beginPath();
+        ctx.strokeStyle = baseColor + 'AA';
+        ctx.fillStyle = baseColor + '44';
+        ctx.fillRect(
+            this.position.x + x * this.direction , // x
+            this.position.y + y, // y
+            width * this.direction , // width
+            height // height
+        );
+        ctx.rect(
+            this.position.x + x * this.direction , // x
+            this.position.y + y, // y
+            width * this.direction , // width
+            height // height
+        );
+        ctx.stroke();
+    }
+    
     
     draw_debug(ctx) {
-        if (this.pushBox) {
-            ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
-            ctx.strokeRect(
-                this.position.x + this.pushBox.x, // x
-                this.position.y + this.pushBox.y, // y
-                this.pushBox.width, // width
-                this.pushBox.height // height
-            );
+        // Dessiner la pushbox
+        this.drawDebugBox(ctx, Object.values(this.boxes.push), '#55FF55');
+
+        // Dessiner la hurtbox
+        for(let HurtBox of this.boxes.hurt){
+            this.drawDebugBox(ctx, HurtBox, '#7777FF');
         }
-    
+
+        // Dessiner la hitbox
+        this.drawDebugBox(ctx, Object.values(this.boxes.hit), '#FF5555');
+
         // Dessiner le point d'origine pour le débogage
         ctx.beginPath();
+        ctx.beginPath();
         ctx.strokeStyle = 'red';
-        ctx.moveTo(Math.floor(this.position.x) - 4, Math.floor(this.position.y) - 0.5);
-        ctx.lineTo(Math.floor(this.position.x) + 5, Math.floor(this.position.y) - 0.5);
-        ctx.moveTo(Math.floor(this.position.x) + 0.5, Math.floor(this.position.y) - 5);
-        ctx.lineTo(Math.floor(this.position.x) + 0.5, Math.floor(this.position.y) + 4);
+        ctx.moveTo(
+            Math.floor(this.position.x) - 4,
+            Math.floor(this.position.y) - 0.5,
+        );
+
+    
+        ctx.lineTo(
+            Math.floor(this.position.x) + 5,
+            Math.floor(this.position.y) - 0.5,
+        );
+    
+        ctx.moveTo(
+            Math.floor(this.position.x) + 0.5,
+            Math.floor(this.position.y) - 5,
+        );
+
+        ctx.lineTo(
+            Math.floor(this.position.x) + 0.5,
+            Math.floor(this.position.y) + 4,
+        );
+
         ctx.stroke();
     }
     updateCtx(ctx) {
         // Gérer la limite droite du canvas
-        this.position.x = Math.min(this.position.x, ctx.canvas.width - this.pushBox.width);
+        this.position.x = Math.min(this.position.x, ctx.canvas.width - this.boxes.push.width);
     
-        // Gérer la limite gauche du canvas
+        // Gérer la limite gauche du canvasq
         this.position.x = Math.max(this.position.x, 0);
     
         // Gestion de la collision avec l'opposant
@@ -282,17 +500,17 @@ export class Fighter {
             let isOpponentToLeft = this.position.x < this.opponent.position.x;
             let isOpponentToRight = this.position.x > this.opponent.position.x;
             if (isOpponentToLeft) {
-                this.position.x = this.opponent.position.x - this.pushBox.width - 1; // Ajustement minimal pour éviter le chevauchement
+                this.position.x = this.opponent.position.x - this.boxes.push.width - 1; // Ajustement minimal pour éviter le chevauchement
             }
             else {
-                this.position.x = this.opponent.position.x + this.opponent.pushBox.width + 1; // Ajustement minimal pour éviter le chevauchement
+                this.position.x = this.opponent.position.x + this.opponent.boxes.push.width + 1; // Ajustement minimal pour éviter le chevauchement
             }
 
             if (isOpponentToRight) {
-                this.position.x = this.opponent.position.x + this.pushBox.width - 1; // Ajustement minimal pour éviter le chevauchement
+                this.position.x = this.opponent.position.x + this.boxes.push.width - 1; // Ajustement minimal pour éviter le chevauchement
             }
             else {
-                this.position.x = this.opponent.position.x - this.opponent.pushBox.width + 1; // Ajustement minimal pour éviter le chevauchement
+                this.position.x = this.opponent.position.x - this.opponent.boxes.push.width + 1; // Ajustement minimal pour éviter le chevauchement
             }
         }
     }
@@ -325,6 +543,7 @@ export class Fighter {
     
         // Mise à jour du contexte (gestion des collisions, limites du canvas, etc.)
         this.updateCtx(ctx);
+        this.updateAttackBoxCollided(time);
     }
     
     
