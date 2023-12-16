@@ -187,17 +187,15 @@ export class Fighter {
     // Jump
     handleJumpInit(){
         this.velocity.y = this.initialVelocity.jump;
-    
-        // Déterminer la direction du saut en fonction des entrées du joueur
-        if (control.isForward(this.playerId, this.direction)) {
-            this.velocity.x = this.initialVelocity.jumpForward;
-        } else if (control.isBackward(this.playerId, this.direction)) {
-            this.velocity.x = -this.initialVelocity.jumpBackward;
-        } else {
-            this.velocity.x = 0;
+
+        if (isMovingForward) {
+            // Just moving forward
+            this.changeState(FighterState.FORWARDWALK);
+        } else if (isMovingBackward) {
+            // Just moving backward
+            this.changeState(FighterState.BACKWARDWALK);
         }
     
-        this.handleMoveInit();
     }
     
     // Move
@@ -233,6 +231,7 @@ export class Fighter {
             this.position.y = STAGE_FLOOR;
             this.changeState(FighterState.IDLE);
         }
+
 
     }
     
