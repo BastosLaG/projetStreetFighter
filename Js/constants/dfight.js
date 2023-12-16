@@ -19,10 +19,7 @@ export let FighterState = {
     HIT: 'hit',
 };
 
-export let frameDelay = {
-    FREEZE: 0,
-    TRANSITION: -1,
-};
+
 
 export let FrameDelay = {
     FREEZE: 0,
@@ -58,29 +55,29 @@ export let FighterAttackBaseData = {
 export let PushBox = {
     //Bastien pushbox
 
-    IDLEB: [-18, -67, 35, 66], 
-    WALKFORWARDB:[-18, -67, 35, 66], 
-    WALKBACKWARDB: [-18, -67, 35, 66], 
-    HITB: [-18, -67, 35, 66], 
+    IDLEB: [-14, -67, 30, 60], 
+    WALKFORWARDB:[-5, -67, 30, 60],
+    WALKBACKWARDB: [-5, -67, 30, 60],
+    HITB: [-5, -67, 30, 60],
 
     //Mehdi pushbox
-    IDLEM: [-18, -60, 37, 60], 
-    WALKFORWARDM: [-8, -69, 27, 66],
-    WALKBACKWARDM: [-8, -69, 27, 66],
-    HITM: [-22, -60, 44, 60],
+    IDLEM: [-14, -67, 30, 60],
+    WALKFORWARDM:[-14, -67, 30, 60],
+    WALKBACKWARDM:[-14, -67, 30, 60],
+    HITM: [-14, -67, 30, 60],
 
     JUMP: [- 18, -115, 32, 55],
 };
 export let HurtBox = {
-    HURT_IDLEB: [[-8, -70, 20, 16], [-12, -55, 26, 35], [-12, -20, 26, 20]],
-    HURT_WALKFORWARDB: [[-8, -70, 20, 16], [-12, -55, 26, 35], [-12, -20, 26, 20]],
-    HURT_WALKBACKWARDB: [[-8, -70, 20, 16], [-12, -55, 26, 35], [-12, -20, 26, 20]],
-    HURT_UPKICKB: [[22, -70, 20, 16], [-12, -55, 26, 35], [-12, -20, 26, 20]],
+    HURT_IDLEB: [[-15, -85, 20, 16], [-28, -69, 40, 50], [-28, -20, 40, 20]],
+    HURT_WALKFORWARDB:[[-15, -85, 20, 16], [-28, -69, 40, 50], [-28, -20, 40, 20]],
+    HURT_WALKBACKWARDB: [[-15, -85, 20, 16], [-28, -69, 40, 50], [-28, -20, 40, 20]],
+    HURT_UPKICKB:[[-15, -85, 20, 16], [-28, -69, 40, 50], [-28, -20, 40, 20]],
     
-    HURT_IDLEM: [[-8, -65, 20, 16], [-16, -47, 30, 26], [-16, -20, 30, 20]],
-    HURT_WALKFORWARDM: [[-8, -65, 20, 16], [-8, -50, 20, 28], [-8, -20, 20, 20]],
-    HURT_WALKBACKWARDM: [[-8, -65, 20, 16], [-8, -50, 20, 28], [-8, -20, 20, 20]],
-    HURT_UPKICKM: [[22, -70, 20, 16], [-12, -55, 26, 35], [-12, -20, 26, 20]],
+    HURT_IDLEM: [[-18, -80, 20, 16], [-28, -69, 40, 50], [-28, -20, 40, 20]],
+    HURT_WALKFORWARDM: [[-18, -80, 20, 16], [-28, -69, 40, 50], [-28, -20, 40, 20]],
+    HURT_WALKBACKWARDM:[[-18, -80, 20, 16], [-28, -69, 40, 50], [-28, -20, 40, 20]],
+    HURT_UPKICKM:[[-18, -80, 20, 16], [-28, -69, 40, 50], [-28, -20, 40, 20]],
 
     
     HURT_JUMP: [[- 18, -115, 32, 55], [- 18, -115, 32, 55], [- 18, -115, 32, 55]],
@@ -90,12 +87,12 @@ export let HurtBox = {
 
 export let HitBox = {
     //Bastien hitbox
-    PUNCHB: [15, -55, 20, 15],
-    UPKICKB: [22, -70, 20, 16],
+    PUNCHB: [-35, -59, 20, 15],
+    UPKICKB: [-40, -89, 20, 16],
 
     //Mehdi hitbox
-    PUNCHM: [-35, -48, 20, 15],
-    UPKICKM: [-40, -70, 20, 16],
+    PUNCHM: [-35, -59, 20, 15],
+    UPKICKM: [-40, -89, 20, 16],
 
 };
 

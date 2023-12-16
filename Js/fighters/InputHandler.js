@@ -4,10 +4,16 @@ import {FighterDirection} from '../constants/dfight.js';
 let heldkeys = new Set();
 let pressedkeys = new Set();
 
+let mappedKeys = controls
+    .map(control => Object.values(control.keyboard))
+    .flat();
+    
 function handleKeyDown(event) {
     event.preventDefault();
     heldkeys.add(event.code);
 }
+
+
 
 function handleKeyUp(event) {
     event.preventDefault();

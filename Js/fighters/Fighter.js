@@ -34,7 +34,7 @@ export class Fighter {
                 update: this.handleIdleState.bind(this),
                 validFrom: [ 
                     undefined, 
-                    FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK, FighterState.JUMP, FighterState.GUARD, FighterState.PUNCH, FighterState.UPKICK],
+                    FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK, FighterState.JUMP, FighterState.GUARD, FighterState.PUNCH, FighterState.UPKICK, FighterState.HIT],
  
             },
             [FighterState.FORWARDWALK]: {   
@@ -64,14 +64,14 @@ export class Fighter {
                 attackStrength: FighterAttackStrength.LIGHT,
                 init: this.handlePunchInit.bind(this),
                 update: this.handlePunchState.bind(this),
-                validFrom: [ FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK],
+                validFrom: [ FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK, FighterState.HIT],
             },
             [FighterState.UPKICK]: {
                 attackType : FighterAttackType.KICK,
                 attackStrength: FighterAttackStrength.MEDIUM,
                 init: this.handleUpKickInit.bind(this),
                 update: this.handleUpKickState.bind(this),
-                validFrom: [ FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK],
+                validFrom: [ FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK, FighterState.HIT],
             },
 
             
@@ -155,23 +155,19 @@ export class Fighter {
             [hitX = 0, hitY = 0, hitWidth = 0, hitHeight = 0] = [],
         ] = this.frames.get(frameKey);
         
-
-        if (this.direction === FighterDirection.LEFT) {
-            pushBox.x = this.position.x - pushBox.width - pushBox.x;
-            hitBox.x = this.position.x - hitBox.width - hitBox.x;
-        }
-
+        
         return {
-            push: {x : pushX, y : pushY, width : pushWidth, height : pushHeight},
+            push: { x: pushX, y: pushY, width: pushWidth, height: pushHeight },
             hurt: [head, body, feet],
-            hit: {x : hitX, y : hitY, width : hitWidth, height : hitHeight},
+            hit: { x: hitX, y: hitY, width: hitWidth, height: hitHeight },
         };
+        
     }
 
     changeState(newstate) {
         // Vérifie si le nouvel état existe et si la transition est valide
         if (!this.states[newstate] || !this.states[newstate].validFrom.includes(this.currentState)) {
-            console.error(`Invalid state transition from ${this.currentState} to ${newstate}`);
+            console.warn(`Invalid state transition from ${this.currentState} to ${newstate}`);
             return;
         }
 
@@ -289,12 +285,14 @@ export class Fighter {
     }
     
 
-    handlePunchState() {    
+    handlePunchState() {  
+        /*  
         if (this.animationFrame === 2) {
             if (this.hasCollideWithOpponent()) {
                 this.opponent.changeState(FighterState.HIT);
             }
         }
+        */
         if (this.animationFrame === 4) {
             this.boxes.hit = { x: 0, y: 0, width: 0, height: 0 }; // Désactiver la hitbox
             this.changeState(FighterState.IDLE);
@@ -302,11 +300,13 @@ export class Fighter {
     }
     
     handleUpKickState() {
+         /*
         if (this.animationFrame === 2) {
             if (this.hasCollideWithOpponent()) {
                 this.opponent.changeState(FighterState.HIT);
             }
         }
+        */
         if (this.animationFrame === 4) {
             this.boxes.hit = { x: 0, y: 0, width: 0, height: 0 }; // Désactiver la hitbox
 
@@ -351,53 +351,61 @@ export class Fighter {
             console.error(`Animation not found for state: ${this.currentState}`);
             return;
         }
-
-        let [frameKey, frameDelay] = animation[this.animationFrame];
-        
-        if (time.passed > this.animationtimer + frameDelay) {
-            this.animationtimer = time.passed;
     
-            if (frameDelay > FrameDelay.FREEZE) {
-                this.animationFrame++;
-                let frameData = this.frames.get(frameKey);
-                if (frameData && frameData.length > 2) { // Vérifier si les données de pushbox existent
-                    // Mettre à jour la pushbox avec les données correctes
-                    this.boxes.push = {
-                        x: frameData[2][0],
-                        y: frameData[2][1],
-                        width: frameData[2][2],
-                        height: frameData[2][3]
-                    };
-                }
-
-                    
+        let [frameKey, frameDelay] = animation[this.animationFrame];
+    
+        if (time.passed <= this.animationtimer + frameDelay) return;
+        this.animationtimer = time.passed;
+    
+        if (frameDelay <= FrameDelay.FREEZE) return;
+        this.animationFrame++;
+        let frameData = this.frames.get(frameKey);
+        if (frameData && frameData.length > 2) {
+            let [pushX, pushY, pushWidth, pushHeight] = frameData[2];
+    
+            if (this.direction === FighterDirection.RIGHT || this.direction === FighterDirection.LEFT) {
+                pushX = -pushX - pushWidth;
+            }
+    
+            this.boxes.push = {
+                x: pushX,
+                y: pushY,
+                width: pushWidth,
+                height: pushHeight
+            };
+                        
+            // Mettre à jour la hurtbox avec les données correctes
+            if (frameData && frameData.length > 3 && Array.isArray(frameData[3])) {
                 // Mettre à jour la hurtbox avec les données correctes
-                if (frameData && frameData.length > 3 && Array.isArray(frameData[3])) {
-                    // Mettre à jour la hurtbox avec les données correctes
-                    this.boxes.hurt = [];
-                    for (let i = 0; i < frameData[3].length; i++) {
-                        this.boxes.hurt.push([
-                            frameData[3][i][0],
-                            frameData[3][i][1],
-                            frameData[3][i][2],
-                            frameData[3][i][3]
-                        ]);
-                    }          
+                this.boxes.hurt = [];
+                for (let i = 0; i < frameData[3].length; i++) {
+                    this.boxes.hurt.push([
+                        frameData[3][i][0],
+                        frameData[3][i][1],
+                        frameData[3][i][2],
+                        frameData[3][i][3]
+                    ]);
+                }    
+            }
+            
+            if (frameData.length > 4 && Array.isArray(frameData[4])) {
+                let [hitX, hitY, hitWidth, hitHeight] = frameData[4];
+
+                if (this.direction === FighterDirection.RIGHT || this.direction === FighterDirection.LEFT) {
+                    hitX = -hitX - hitWidth;
                 }
-                // Mettre à jour la hitbox avec les données correctes
-                if (frameData && frameData.length > 4) {
-                    // Mettre à jour la hitbox avec les données correctes
-                    this.boxes.hit = {
-                        x: frameData[4][0],
-                        y: frameData[4][1],
-                        width: frameData[4][2],
-                        height: frameData[4][3]
-                    };
-                }   
+    
+                this.boxes.hit = {
+                    x: hitX,
+                    y: hitY,
+                    width: hitWidth,
+                    height: hitHeight
+                };
             }
-            if (this.animationFrame >= animation.length) {
-                this.animationFrame = 0;
-            }
+        }
+    
+        if (this.animationFrame >= animation.length) {
+            this.animationFrame = 0;
         }
     }
 
@@ -437,14 +445,14 @@ export class Fighter {
         ctx.strokeStyle = baseColor + 'AA';
         ctx.fillStyle = baseColor + '44';
         ctx.fillRect(
-            this.position.x + x * this.direction , // x
-            this.position.y + y, // y
+            Math.floor(this.position.x + (x * this.direction)) , // x
+            Math.floor(this.position.y + y), // y
             width * this.direction , // width
             height // height
         );
         ctx.rect(
-            this.position.x + x * this.direction , // x
-            this.position.y + y, // y
+            Math.floor(this.position.x + (x * this.direction)) , // x
+            Math.floor(this.position.y + y), // y
             width * this.direction , // width
             height // height
         );
@@ -464,32 +472,7 @@ export class Fighter {
         // Dessiner la hitbox
         this.drawDebugBox(ctx, Object.values(this.boxes.hit), '#FF5555');
 
-        // Dessiner le point d'origine pour le débogage
-        ctx.beginPath();
-        ctx.beginPath();
-        ctx.strokeStyle = 'red';
-        ctx.moveTo(
-            Math.floor(this.position.x) - 4,
-            Math.floor(this.position.y) - 0.5,
-        );
 
-    
-        ctx.lineTo(
-            Math.floor(this.position.x) + 5,
-            Math.floor(this.position.y) - 0.5,
-        );
-    
-        ctx.moveTo(
-            Math.floor(this.position.x) + 0.5,
-            Math.floor(this.position.y) - 5,
-        );
-
-        ctx.lineTo(
-            Math.floor(this.position.x) + 0.5,
-            Math.floor(this.position.y) + 4,
-        );
-
-        ctx.stroke();
     }
     updateCtx(ctx) {
         // Gérer la limite droite du canvas
@@ -570,10 +553,10 @@ export class Fighter {
         ctx.scale(this.direction, 1);
         ctx.drawImage(
             this.image, 
-            x, y, 
-            width, height, 
-            -originX, -originY, 
-            width, height
+            x , y, 
+            width  , height , 
+            -originX - 20, -originY - 20, 
+            width + 20, height +20
         );
         ctx.restore(); // Restaure l'état précédent du contexte
         

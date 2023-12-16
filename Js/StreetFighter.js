@@ -13,12 +13,12 @@ export class StreetFighterGame {
     constructor() {
         this.ctx = this.getContext();
         this.fighters = [
-            new Bastien(100, STAGE_FLOOR, FighterDirection.RIGHT, 1),
             new Mehdi(300, STAGE_FLOOR, FighterDirection.LEFT, 0),
+            new Bastien(100, STAGE_FLOOR, FighterDirection.RIGHT, 1),
         ];
 
-        this.fighters[1].opponent = this.fighters[0];
         this.fighters[0].opponent = this.fighters[1];
+        this.fighters[1].opponent = this.fighters[0];
 
         this.camera = new Camera(STAGE_MID_POINT + STAGE_PADDING - (this.ctx.canvas.width / 2), 16, this.fighters);
 

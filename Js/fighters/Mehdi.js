@@ -139,9 +139,9 @@ export class Mehdi extends Fighter {
         this.animation = this.gen_AnimationObject([FighterState.IDLE], "idle", 7, 130, FrameDelay.FREEZE);
         this.animation = this.gen_AnimationObject([FighterState.FORWARDWALK], "forwardwalk", 8, 80, FrameDelay.FREEZE);        
         this.animation = this.gen_AnimationObject([FighterState.BACKWARDWALK], "backwardwalk", 8, 80, FrameDelay.FREEZE);
-        this.animation = this.gen_AnimationObject([FighterState.UPKICK], "upkick", 11, 110, FrameDelay.FREEZE);
+        this.animation = this.gen_AnimationObject([FighterState.UPKICK], "upkick", 11, 80, FrameDelay.FREEZE);
         this.animation = this.gen_AnimationObject("lowkick", "lowkick", 6, FrameDelay.FREEZE);
-        this.animation = this.gen_AnimationObject([FighterState.JUMP], "jump", 9, 130, FrameDelay.FREEZE);
-        this.animation = this.gen_AnimationObject([FighterState.PUNCH], "punch", 5, 130, FrameDelay.FREEZE);
+        this.animation = this.gen_AnimationObject([FighterState.JUMP], "jump", 9, 110, FrameDelay.FREEZE);
+        this.animation = this.gen_AnimationObject([FighterState.PUNCH], "punch", 5, 80, FrameDelay.FREEZE);
     }
 }
