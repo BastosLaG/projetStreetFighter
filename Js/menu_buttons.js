@@ -15,6 +15,22 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("music").volume = volume;
     });
 });
+
+function toggleCredits() {
+    var creditsOverlay = document.getElementById("CreditsOverlay");
+    if (creditsOverlay.style.display === "block") {
+        creditsOverlay.style.display = "none";
+    } else {
+        creditsOverlay.style.display = "block";
+    }
+}
+
+//////*  Credits button   *//////
+document.getElementById('creditButton').addEventListener('click', function () {
+    click.play(); // Jouer l'effet sonore
+    toggleCredits();
+});
+
 //////*  Start button   *//////
 document.getElementById('startButton').addEventListener('click', function () {
     click.play(); // Jouer l'effet sonore

@@ -23,12 +23,59 @@ body {
 }
 
 .overlay-content {
-  background-color: rgb(255, 0, 0);
+  background-image: url("assets/menu/BG.png");
+  background-size: cover;
+  background-position: center;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
+  border: 2px solid #000;
+  border-radius: 10px;
+}
+
+#settingsImage{
+  display: block;
+  margin: 0 auto;
+}
+
+#volumeImage,
+#volumeControl {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#closeButton{
+  display: block;
+  margin: 0 auto;
+}
+
+.overlay2 {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: none;
+  pointer-events: none;
+}
+
+.overlay2-content {
+  background-image: url("assets/menu/BG.png");
+  background-size: cover;
+  background-position: center;
+  position: absolute;
+  top: 90%;
+  left: 60%;
+  transform: translate(70%, -90%);
+  text-align: center;
+  border: 2px solid #000;
+  border-radius: 10px;
+  pointer-events: auto;
 }
 
 hr {
