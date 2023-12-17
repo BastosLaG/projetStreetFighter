@@ -1,8 +1,8 @@
 import { Fighter } from './Fighter.js';
 import { FighterState, FrameDelay, PushBox, HurtBox, HitBox} from '../constants/dfight.js';
 
-var jumpsound = new Audio('./assets/sound/Bastien/DBZjumpSoundEffect.mp3');
-jumpsound.volume=0.4;
+// var jumpsound = new Audio('./assets/sound/Bastien/DBZjumpSoundEffect.mp3');
+// jumpsound.volume=0.4;
 export class Bastien extends Fighter {
     constructor(x, y, direction, playerId) {
         super(x, y, direction, playerId);

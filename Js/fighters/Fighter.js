@@ -6,6 +6,14 @@ import { Control } from '../constants/control.js';
 import { gameState } from '../gestions/gameState.js';
 
 const LATERAL_AIR_VELOCITY = 76;
+// var jumpsound = new Audio('./assets/sound/Bastien/DBZjumpSoundEffect.mp3');
+// var blocksound = new Audio('./assets/sound/Bastien/block.ogg');
+// var punchsound = new Audio('./assets/sound/Bastien/punch.ogg');
+// var kicksound = new Audio('./assets/sound/Bastien/kick.ogg');
+
+
+
+// kicksound.volume=0.2;
 export class Fighter {
     constructor(x, y, direction, palyerId) {
         this.playerId = palyerId;
@@ -207,6 +215,9 @@ export class Fighter {
     }
     // Jump
     handleJumpInit(){
+        var jumpsound = new Audio('./assets/sound/Bastien/DBZjumpSoundEffect.mp3');
+        jumpsound.volume=0.2;
+        jumpsound.play();
         this.velocity.y = this.initialVelocity.jump;
 
     }
@@ -221,12 +232,18 @@ export class Fighter {
 
     handleGuardInit() { 
         this.velocity.x = 0;
+        var blocksound = new Audio('./assets/sound/Bastien/block.ogg');
+        blocksound.volume=0.2;
+        blocksound.play();
 
     }
 
 
     handlePunchInit() {
         this.handleIdleInit();
+        var punchsound = new Audio('./assets/sound/Bastien/punch.ogg');
+        punchsound.volume=0.1;
+        punchsound.play();
         this.damageDealt = false; 
         this.boxes.hit = { x: 0, y: 0, width: 0, height: 0 }; // Désactiver la hitbox
     }
@@ -234,6 +251,9 @@ export class Fighter {
 
     handleUpKickInit() {
         this.handleIdleInit();
+        var kicksound = new Audio('./assets/sound/Bastien/kick.ogg');
+        kicksound.volume=0.2;
+        kicksound.play();
         this.damageDealt = false; 
         this.boxes.hit = { x: 0, y: 0, width: 0, height: 0 }; // Désactiver la hitbox
 
@@ -322,7 +342,6 @@ export class Fighter {
          
         if (this.animationFrame === 4) {
             this.boxes.hit = { x: 0, y: 0, width: 0, height: 0 }; // Désactiver la hitbox
-
             this.changeState(FighterState.IDLE);
         }
     }
