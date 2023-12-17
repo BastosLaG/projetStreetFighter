@@ -3,9 +3,9 @@ import { STAGE_FLOOR } from '../constants/stage.js';
 import * as control from './InputHandler.js';
 import { getActualBoxDimensions, rectsOverlap, boxOverlap } from './collision.js';
 import { Control } from '../constants/control.js';
+import { gameState } from '../gestions/gameState.js';
 export class Fighter {
-    constructor(name, x, y, direction, palyerId) {
-        this.name = name;
+    constructor(x, y, direction, palyerId) {
         this.playerId = palyerId;
         
         this.position = { x, y };
@@ -13,9 +13,10 @@ export class Fighter {
         this.initialVelocity = {};
         this.direction = direction;
         this.gravity = 0;
-        this.hitPoints = 100;
-        this.score = 0;
         this.currentState = null;
+        this.damageDealt = false; 
+        this.lastHitTime = 0;
+        this.hitCooldown = 400; 
 
         this.frames = new Map();
         this.animationFrame = 0;
@@ -177,6 +178,7 @@ export class Fighter {
     changeState(newState) {
         if (!this.states[newState] || (this.currentState !== null && !this.states[newState].validFrom.includes(this.currentState))) {
             console.warn(`Invalid state transition from ${this.currentState} to ${newState}`);
+            this.damageDealt = false;
             return;
         }
 
@@ -221,12 +223,14 @@ export class Fighter {
 
     handlePunchInit() {
         this.handleIdleInit();
+        this.damageDealt = false; 
         this.boxes.hit = { x: 0, y: 0, width: 0, height: 0 }; // Désactiver la hitbox
     }
     
 
     handleUpKickInit() {
         this.handleIdleInit();
+        this.damageDealt = false; 
         this.boxes.hit = { x: 0, y: 0, width: 0, height: 0 }; // Désactiver la hitbox
 
     }
@@ -414,6 +418,9 @@ export class Fighter {
     }
 
     updateAttackBoxCollided(time) {
+        if (time.passed < this.lastHitTime + this.hitCooldown) {
+            return; // Ignore les collisions si le délai n'est pas écoulé
+        }
         if (!this.states[this.currentState].attackType) return;
     
         let actualHitBox = getActualBoxDimensions(this.position, this.direction, this.boxes.hit);
@@ -427,19 +434,23 @@ export class Fighter {
             );
     
             if (!boxOverlap(actualHitBox, actualOpponentHurtBox)) continue;
-    
+            this.damageDealt = true;
             if (this.opponent.currentState === FighterState.GUARD) {
                 // Le coup est bloqué
-                console.log(`${this.opponent.name} a bloqué le coup de ${this.name}`);
+                console.log(`${gameState.fighters[this.playerId].id} a bloqué le coup de ${gameState.fighters[this.opponent.playerId].id}`);
                 // Vous pouvez ajouter ici des effets visuels ou sonores pour indiquer que le coup a été bloqué
             } else {
                 // Le coup touche normalement
                 let hurtIndex = this.opponent.boxes.hurt.indexOf(hurt);
                 let hurtName = ['head', 'body', 'feet'];
                 let strength = this.states[this.currentState].attackStrength;
-    
-                this.opponent.hitPoints -= FighterAttackBaseData[strength].damage;
-                console.log(`${this.name} a frappé ${this.opponent.name} au ${hurtName[hurtIndex]}`);
+
+                gameState.fighters[this.opponent.playerId].score += FighterAttackBaseData[strength].score;
+                gameState.fighters[this.playerId].hitPoints -= FighterAttackBaseData[strength].damage;
+
+
+                console.log(`${gameState.fighters[this.opponent.playerId].id} a frappé ${gameState.fighters[this.playerId].id} au ${hurtName[hurtIndex]}`);
+                this.lastHitTime = time.passed; 
             }
         }
     }
@@ -579,7 +590,7 @@ export class Fighter {
         
         ctx.restore(); // Restaure l'état précédent du contexte
         
-        this.draw_debug(ctx);
+        //this.draw_debug(ctx);
     }
     
 }

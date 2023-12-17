@@ -4,7 +4,7 @@ import { FighterState, PushBox, FrameDelay, HurtBox, HitBox} from '../constants/
 
 export class Mehdi extends Fighter {
     constructor(x, y, direction, playerId) {
-        super('Mehdi', x, y, direction, playerId);
+        super( x, y, direction, playerId);
 
         this.image = document.body.querySelector('img[alt="mehdi"]');
         this.frames = new Map();

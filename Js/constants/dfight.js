@@ -20,6 +20,10 @@ export let FighterState = {
     HADOKEN: 'hadoken'
 };
 
+export let FighterId = {
+    BASTIEN: 'bastien',
+    MEHDI: 'mehdi',
+};
 
 
 export let FrameDelay = {
@@ -35,7 +39,6 @@ export let FighterAttackType = {
 export let FighterAttackStrength = {
     LIGHT: 'light',
     MEDIUM: 'medium',
-    HEAVY: 'heavy',
 };
 
 export let FighterAttackBaseData = {
@@ -47,7 +50,7 @@ export let FighterAttackBaseData = {
         score: 300, 
         damage: 20,
     },
-    [FighterAttackStrength.LIGHT]: {
+    [FighterAttackStrength.HEAVY]: {
         score: 100, 
         damage: 28,
     }

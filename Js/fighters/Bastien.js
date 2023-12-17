@@ -5,7 +5,7 @@ var jumpsound = new Audio('./assets/sound/Bastien/DBZjumpSoundEffect.mp3');
 jumpsound.volume=0.4;
 export class Bastien extends Fighter {
     constructor(x, y, direction, playerId) {
-        super('Bastien', x, y, direction, playerId);
+        super(x, y, direction, playerId);
 
         this.image = document.body.querySelector('img[alt="bastien"]');
         this.frames = new Map();

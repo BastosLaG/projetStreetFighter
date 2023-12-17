@@ -1,7 +1,9 @@
 import { HEALTH_COLOR, HEALTH_DAMAGE_COLOR, HEALTH_MAX_HIT_POINT, TIME_DELAY, TIME_FLASH_DELAY, TIME_FRAME_KEYS } from "../constants/battle.js";
+import { gameState } from "../gestions/gameState.js";
 
+let FPS = 60;
 export class StatusBar {
-    constructor(fighters) {
+    constructor() {
         this.image = document.querySelector('img[alt="misc"]');
 
         this.time = 99;
@@ -17,7 +19,6 @@ export class StatusBar {
             hitPoints: HEALTH_MAX_HIT_POINT,
         }];
 
-        this.fighters = fighters;
 
         this.frames = new Map([
             ['health-bar', [16,18,145,11]],
@@ -46,6 +47,7 @@ export class StatusBar {
             [`${TIME_FRAME_KEYS[1]}-9`, [160,32,14,16]],
             
         ]);
+        this.name = gameState.fighters.map (({id}) => 'tag-${toLowerCase()}');
     }
 
     drawFrame(ctx, frame, x, y, direction = 1) {
@@ -72,14 +74,15 @@ export class StatusBar {
     }
 
     updateHealthBars(time){
-        for (let i in this.healthBars){
-            if (this.healthBars[i].hitPoints <= this.fighters[i].hitPoints) continue; 
-            this.healthBars[i].hitPoints = Math.max(0, this.healthBars[i].hitPoints - (time.passed * FPS));
+        for (let index in this.healthBars){
+            if(this.healthBars[index].hitPoints <= gameState.fighters[index].hitPoints) continue;
+            this.healthBars[index].hitPoints = Math.max(0, this.healthBars[index].hitPoints - 2);
         }
     }
 
     update(time){
         this.updateTime(time);
+        this.updateHealthBars(time);
     }
 
     drawHealthBars(ctx){
@@ -104,6 +107,23 @@ export class StatusBar {
 
     }
 
+    drawScore(ctx, score, x){
+        if(score < 1)return;
+
+        let strValue = String(score);
+        let buffer = ((6 * 12) - String(score).length * 12);
+
+        for (let i = 0; i < strValue.length; i++){
+            this.drawFrame(ctx, `score-${strValue[i]}`, x + buffer + (i * 12), 1);
+        }
+
+    }
+
+    drawScores(ctx){
+        this.drawScore(ctx, gameState.fighters[0].score, 32);
+        this.drawScore(ctx, gameState.fighters[1].score, 352);
+    }
+
     drawTime(ctx){
         const timeString = String(Math.max(this.time, 0)).padStart(2, '00');
         const flashFrame = TIME_FRAME_KEYS[Number(this.useFlashFrames)];
@@ -115,5 +135,6 @@ export class StatusBar {
     draw(ctx) {
         this.drawHealthBars(ctx);
         this.drawTime(ctx);
+        
     }
 }
