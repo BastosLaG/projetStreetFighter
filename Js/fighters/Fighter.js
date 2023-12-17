@@ -4,6 +4,8 @@ import * as control from './InputHandler.js';
 import { getActualBoxDimensions, rectsOverlap, boxOverlap } from './collision.js';
 import { Control } from '../constants/control.js';
 import { gameState } from '../gestions/gameState.js';
+
+const LATERAL_AIR_VELOCITY = 76;
 export class Fighter {
     constructor(x, y, direction, palyerId) {
         this.playerId = palyerId;
@@ -176,16 +178,18 @@ export class Fighter {
 
 
     changeState(newState) {
-        if (!this.states[newState] || (this.currentState !== null && !this.states[newState].validFrom.includes(this.currentState))) {
-            console.warn(`Invalid state transition from ${this.currentState} to ${newState}`);
+        // Vérifier si newState est défini et existe dans this.states
+        if (newState === undefined || !this.states[newState]) {
+            console.warn(`Transition d'état invalide de ${this.currentState} à ${newState}`);
             this.damageDealt = false;
             return;
         }
-
+    
         this.currentState = newState;
         this.animationFrame = 0;
         this.states[this.currentState].init();
     }
+    
     
 
     handleEntryInit() {
@@ -240,17 +244,6 @@ export class Fighter {
         this.boxes.hit = { x: 0, y: 0, width: 0, height: 0 }; // Désactiver la hitbox
     }
 
-    // Idle
-    handleJumpState(time) {
-        this.velocity.y += this.gravity * time.delta;
-        if (this.position.y > STAGE_FLOOR) {
-            this.position.y = STAGE_FLOOR;
-            this.changeState(FighterState.IDLE);
-        }
-
-
-    }
-    
 
     handleWalkForwadeState() {
         if(!control.isForward(this.playerId, this.direction)) this.changeState(FighterState.IDLE);
@@ -283,12 +276,28 @@ export class Fighter {
     }
     // Jump
     handleJumpState(time) {
-        this.velocity.y += this.gravity * time.delta;   
-        if (this.position.y  > STAGE_FLOOR) {
-            this.position.y = STAGE_FLOOR;
-            if(!control.isUp(this.playerId, this.direction)) this.changeState(FighterState.IDLE);
+        // Vérification des entrées de l'utilisateur pour le mouvement latéral
+        let isMovingForward = control.isForward(this.playerId, this.direction);
+        let isMovingBackward = control.isBackward(this.playerId, this.direction);
+    
+        // Ajustement de la vélocité en fonction des entrées
+        if (isMovingForward) {
+            this.velocity.x = LATERAL_AIR_VELOCITY;
+        } else if (isMovingBackward) {
+            this.velocity.x = -LATERAL_AIR_VELOCITY;
         }
+    
+        // Mise à jour de la position verticale
+        this.velocity.y += this.gravity * time.delta;
+        if (this.position.y > STAGE_FLOOR) {
+            this.position.y = STAGE_FLOOR;
+            this.changeState(FighterState.IDLE);
+        }
+    
+        // Mise à jour de la position horizontale
+        this.position.x += this.velocity.x * time.delta * this.direction;
     }
+    
 
     // Move
     handleMoveState() {}
@@ -590,7 +599,7 @@ export class Fighter {
         
         ctx.restore(); // Restaure l'état précédent du contexte
         
-        //this.draw_debug(ctx);
+        this.draw_debug(ctx);
     }
     
 }
