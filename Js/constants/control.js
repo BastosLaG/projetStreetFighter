@@ -5,6 +5,7 @@ export let Control = {
     DOWN: 'down',
     PUNCH: 'punch',
     UPKICK: 'upkick',
+    HADOKEN: 'hadoken'
 
 
 
@@ -31,6 +32,7 @@ export let controls = [
             [Control.DOWN]: 'KeyS',
             [Control.PUNCH]: 'KeyE',
             [Control.UPKICK]: 'KeyF',
+            [Control.HADOKEN]: 'KeyA',
         },
     },
 ];

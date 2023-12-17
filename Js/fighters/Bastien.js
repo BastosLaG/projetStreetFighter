@@ -263,6 +263,7 @@ export class Bastien extends Fighter {
         this.animation = this.gen_AnimationObject([FighterState.PUNCH], "punch", 7, 80, FrameDelay.FREEZE);
         this.animation = this.gen_AnimationObject(FighterState.HIT, "hit", 1, 80, FrameDelay.FREEZE);
         this.animation = this.gen_AnimationObject([FighterState.UPKICK], "up_kick", 6, 80,  FrameDelay.FREEZE);
+        this.animation = this.gen_AnimationObject(FighterState.HADOKENs, "hadoken", 8, 80, FrameDelay.FREEZE);
 
 
         // this.animation = this.gen_AnimationObject("ki", "ki", 25);

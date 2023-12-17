@@ -7,11 +7,15 @@ export class Fighter {
     constructor(name, x, y, direction, palyerId) {
         this.name = name;
         this.playerId = palyerId;
+        
         this.position = { x, y };
         this.velocity = { x: 0, y: 0 };
         this.initialVelocity = {};
         this.direction = direction;
         this.gravity = 0;
+        this.hitPoints = 100;
+        this.score = 0;
+        this.currentState = null;
 
         this.frames = new Map();
         this.animationFrame = 0;
@@ -34,7 +38,7 @@ export class Fighter {
                 update: this.handleIdleState.bind(this),
                 validFrom: [ 
                     undefined, 
-                    FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK, FighterState.JUMP, FighterState.GUARD, FighterState.PUNCH, FighterState.UPKICK, FighterState.HIT],
+                    FighterState.IDLE, FighterState.ENTRY, FighterState.FORWARDWALK, FighterState.BACKWARDWALK, FighterState.JUMP, FighterState.GUARD, FighterState.PUNCH, FighterState.UPKICK, FighterState.HIT],
  
             },
             [FighterState.FORWARDWALK]: {   
@@ -73,11 +77,16 @@ export class Fighter {
                 update: this.handleUpKickState.bind(this),
                 validFrom: [ FighterState.IDLE, FighterState.FORWARDWALK, FighterState.BACKWARDWALK, FighterState.HIT],
             },
+            [FighterState.ENTRY]: {
+                init: this.handleEntryInit.bind(this),
+                update: this.handleEntryState.bind(this),
+                validFrom: [ FighterState.IDLE ],
+            },
 
-            
 
-        }
-        this.changeState(FighterState.IDLE);
+        };
+        this.changeState(FighterState.ENTRY);
+
     }
 
 
@@ -164,17 +173,23 @@ export class Fighter {
         
     }
 
-    changeState(newstate) {
-        // Vérifie si le nouvel état existe et si la transition est valide
-        if (!this.states[newstate] || !this.states[newstate].validFrom.includes(this.currentState)) {
-            console.warn(`Invalid state transition from ${this.currentState} to ${newstate}`);
+
+    changeState(newState) {
+        if (!this.states[newState] || (this.currentState !== null && !this.states[newState].validFrom.includes(this.currentState))) {
+            console.warn(`Invalid state transition from ${this.currentState} to ${newState}`);
             return;
         }
 
-    
-        this.currentState = newstate;
+        this.currentState = newState;
         this.animationFrame = 0;
         this.states[this.currentState].init();
+    }
+    
+
+    handleEntryInit() {
+        this.velocity.x = 0;
+        this.velocity.y = 0;
+        this.position.y = STAGE_FLOOR;
     }
     
 
@@ -214,6 +229,11 @@ export class Fighter {
         this.handleIdleInit();
         this.boxes.hit = { x: 0, y: 0, width: 0, height: 0 }; // Désactiver la hitbox
 
+    }
+
+    handleHitInit() {
+        this.handleIdleInit();
+        this.boxes.hit = { x: 0, y: 0, width: 0, height: 0 }; // Désactiver la hitbox
     }
 
     // Idle
@@ -277,13 +297,8 @@ export class Fighter {
     
 
     handlePunchState() {  
-        /*  
-        if (this.animationFrame === 2) {
-            if (this.hasCollideWithOpponent()) {
-                this.opponent.changeState(FighterState.HIT);
-            }
-        }
-        */
+          
+
         if (this.animationFrame === 4) {
             this.boxes.hit = { x: 0, y: 0, width: 0, height: 0 }; // Désactiver la hitbox
             this.changeState(FighterState.IDLE);
@@ -291,13 +306,7 @@ export class Fighter {
     }
     
     handleUpKickState() {
-         /*
-        if (this.animationFrame === 2) {
-            if (this.hasCollideWithOpponent()) {
-                this.opponent.changeState(FighterState.HIT);
-            }
-        }
-        */
+         
         if (this.animationFrame === 4) {
             this.boxes.hit = { x: 0, y: 0, width: 0, height: 0 }; // Désactiver la hitbox
 
@@ -305,10 +314,14 @@ export class Fighter {
         }
     }
 
-    
+        // Méthode pour gérer l'état ENTRY
+        handleEntryState(time) {
+            if (this.animationFrame === 10 ) {
+                this.changeState(FighterState.IDLE);
+            }
+        }
+        
 
-    
-    
     gen_map(text, listePosition, pushBox = null, hurtBox = null, hitBox = null) {
         for (let i = 1; i-1 < listePosition.length; i++){
             let frameData = [listePosition[i-1], [listePosition[i-1][2]/2, listePosition[i-1][3]]];
@@ -404,7 +417,7 @@ export class Fighter {
         if (!this.states[this.currentState].attackType) return;
     
         let actualHitBox = getActualBoxDimensions(this.position, this.direction, this.boxes.hit);
-        
+    
         for (let hurt of this.opponent.boxes.hurt) {
             let [x, y, width, height] = hurt;
             let actualOpponentHurtBox = getActualBoxDimensions(
@@ -415,13 +428,19 @@ export class Fighter {
     
             if (!boxOverlap(actualHitBox, actualOpponentHurtBox)) continue;
     
-            let hurtIndex = this.opponent.boxes.hurt.indexOf(hurt);
-            let hurtName = ['head', 'body', 'feet'];
-            let strength = this.states[this.currentState].attackStrength;
-            
-            this.opponent.hitPoints -= FighterAttackBaseData[strength].damage;
-
-            console.log(`${this.name} has hit ${this.opponent.name} in the ${hurtName[hurtIndex]}`);
+            if (this.opponent.currentState === FighterState.GUARD) {
+                // Le coup est bloqué
+                console.log(`${this.opponent.name} a bloqué le coup de ${this.name}`);
+                // Vous pouvez ajouter ici des effets visuels ou sonores pour indiquer que le coup a été bloqué
+            } else {
+                // Le coup touche normalement
+                let hurtIndex = this.opponent.boxes.hurt.indexOf(hurt);
+                let hurtName = ['head', 'body', 'feet'];
+                let strength = this.states[this.currentState].attackStrength;
+    
+                this.opponent.hitPoints -= FighterAttackBaseData[strength].damage;
+                console.log(`${this.name} a frappé ${this.opponent.name} au ${hurtName[hurtIndex]}`);
+            }
         }
     }
     
@@ -474,20 +493,13 @@ export class Fighter {
     
         // Gestion de la collision avec l'opposant
         if (this.hasCollideWithOpponent()) {
-            let isOpponentToLeft = this.position.x < this.opponent.position.x;
-            let isOpponentToRight = this.position.x > this.opponent.position.x;
-            if (isOpponentToLeft) {
-                this.position.x = this.opponent.position.x - this.boxes.push.width - 1; // Ajustement minimal pour éviter le chevauchement
-            }
-            else {
-                this.position.x = this.opponent.position.x + this.opponent.boxes.push.width + 1; // Ajustement minimal pour éviter le chevauchement
-            }
-
-            if (isOpponentToRight) {
-                this.position.x = this.opponent.position.x + this.boxes.push.width - 1; // Ajustement minimal pour éviter le chevauchement
-            }
-            else {
-                this.position.x = this.opponent.position.x - this.opponent.boxes.push.width + 1; // Ajustement minimal pour éviter le chevauchement
+            const repulsionForce = 1; // Ajustez cette valeur en fonction de vos besoins
+            if (this.position.x < this.opponent.position.x) {
+                this.position.x -= repulsionForce;
+                this.opponent.position.x += repulsionForce;
+            } else {
+                this.position.x += repulsionForce;
+                this.opponent.position.x -= repulsionForce;
             }
         }
     }

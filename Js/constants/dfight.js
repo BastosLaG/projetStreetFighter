@@ -17,6 +17,7 @@ export let FighterState = {
     PUNCH: 'punch',
     UPKICK: 'upkick',
     HIT: 'hit',
+    HADOKEN: 'hadoken'
 };
 
 
@@ -56,9 +57,9 @@ export let PushBox = {
     //Bastien pushbox
 
     IDLEB: [-14, -67, 30, 60], 
-    WALKFORWARDB:[-5, -67, 30, 60],
-    WALKBACKWARDB: [-5, -67, 30, 60],
-    HITB: [-5, -67, 30, 60],
+    WALKFORWARDB:[-14, -67, 30, 60],
+    WALKBACKWARDB: [-14, -67, 30, 60],
+    HITB: [-14, -67, 30, 60],
 
     //Mehdi pushbox
     IDLEM: [-14, -67, 30, 60],
