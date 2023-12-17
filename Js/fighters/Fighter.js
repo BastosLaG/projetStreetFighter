@@ -599,7 +599,7 @@ export class Fighter {
         
         ctx.restore(); // Restaure l'état précédent du contexte
         
-        this.draw_debug(ctx);
+        //this.draw_debug(ctx);
     }
     
 }
