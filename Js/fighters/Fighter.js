@@ -316,6 +316,10 @@ export class Fighter {
     
         // Mise à jour de la position horizontale
         this.position.x += this.velocity.x * time.delta * this.direction;
+
+        //DBZ mode 
+        // this.position.x += this.velocity.x * this.direction;
+
     }
     
 
