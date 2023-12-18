@@ -74,20 +74,24 @@ export class StatusBar {
         }
     }
 
-	playKO(winner) {
-        let video = document.getElementById(`KO-${winner}`);
-        video.style.display = 'block';
-        video.play();
-        video.onended = function () {
-            console.log('Video ended. Redirecting to index.html');
+	playKO(winnerId) {
+        if (this.koPlayed) return; // Empêche la méthode de s'exécuter si elle a déjà été appelée
+
+        this.koPlayed = true; // Marquer la vidéo comme jouée
+        console.log(`Le joueur ${winnerId} a gagné. Lecture de la vidéo.`);
+
+        let videoSrc = winnerId === "0" ? "./assets/player2Win.mp4" : "./assets/player1Win.mp4";
+        let videoElement = document.getElementById('KO');
+        videoElement.src = videoSrc;
+        videoElement.load();
+
+        videoElement.style.display = 'block';
+        videoElement.play();
+        videoElement.onended = () => {
+            console.log('Fin de la vidéo. Redirection vers index.html');
             window.location.href = 'index.html';
-            video.onload();
         };
     }
-    
-    
-    
-
 	updateHealthBars(){
 		let playerKOed = false;
         let winner; 
