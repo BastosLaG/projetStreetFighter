@@ -76,7 +76,7 @@ export class StatusBar {
 
 	playKO(){
 		let video = document.getElementById('KO');
-		video.style.display = 'block'; // Afficher la vidéo
+		video.style.display = 'block';
 		video.play();
 		video.onended = function() {
 			window.location.href = 'index.html';

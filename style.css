@@ -4,7 +4,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-image: url('assets/menu/BG2.gif'); /* Remplace 'background.jpg' par le chemin de ton image de fond */
+    background-image: url('assets/menu/BG2.gif'); 
     background-size: cover;
     background-position: center;
     cursor: url('assets/menu/cursor.png'),auto;
@@ -23,7 +23,7 @@ body {
 }
 
 .overlay-content {
-  background-image: url("assets/menu/BG.png");
+  background-color: rgba(189, 98, 71, 0.87);
   background-size: cover;
   background-position: center;
   position: absolute;
@@ -82,10 +82,10 @@ hr {
   opacity: 0;
 }
 .navbar {
-  position: fixed; /* Changé pour un positionnement fixe */
-  bottom: 0; /* Positionné en bas */
-  left: 0; /* Positionné à gauche */
-  text-align: left; /* Alignement à gauche pour les liens */
+  position: fixed; 
+  bottom: 0;
+  left: 0; 
+  text-align: left; 
 }
 .link-wrapper {
   position: relative;
@@ -107,8 +107,8 @@ hr {
     top: 0;
     left: 0;
     right: 0;
-    width: 100%; /* ou une taille spécifique si nécessaire */
-  height: auto; /* garde le ratio de l'image */
+    width: 100%; 
+  height: auto; 
   }
   &:hover {
     z-index: 9999;
@@ -170,8 +170,8 @@ hr {
 }
 .shape-wrapper {
   filter: sepia(50%) saturate(3);
-  width: 100%; /* ou une taille spécifique si nécessaire */
-  height: auto; /* garde le ratio de l'image */
+  width: 100%; 
+  height: auto; 
   .shape {
     transition: all .1s linear;
     position: absolute;
