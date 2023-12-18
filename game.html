@@ -21,11 +21,25 @@
             
             img {
                 display: none;
-            }  
+            }
+			video {
+				display: none;
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				transform: translate(-50%, -50%);
+				z-index: 3;
+			} 
         </style>
         <script type="module" src="./Js/index.js"></script>        
     </head>
-    <body>        
+	<audio autoplay loop id="music" onloadedmetadata="this.play()">
+		<source src='./assets/sound/main_menu/Find_Your_Own_Way.mp3' type="audio/mp3">
+	</audio>
+    <body>       
         <main>
             <canvas width="384" height="224"></canvas>
         </main>
@@ -36,9 +50,9 @@
         <img src=./assets/mehdi_fei_long/mehdi.png alt="mehdi"  />
         <img src=./assets/misc.png alt="misc" />
         
-        <audio autoplay loop id="music">
-            <source src='./assets/sound/main_menu/Find_Your_Own_Way.mp3' type="audio/mpeg">
-        </audio>
+		<video id="KO" class="video">
+            <source src="./assets/KO.mp4" type="video/mp4">
+        </video>
         <link rel="shortcut icon" href="">
     </body>
     <script>document.getElementById("music").volume = 0.03;</script>

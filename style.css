@@ -210,6 +210,20 @@ hr {
           animation-timing-function: linear;
 }
 
+#P1, #P2 {
+	display: inline-block;
+	vertical-align: middle;
+  }
+  
+  #P2{
+	margin-left: 125px;
+  }
+  
+  #NameInput{
+	display: block;
+	margin: 0 auto;
+  }
+
 .video {
   position: fixed;
   top: 50%;

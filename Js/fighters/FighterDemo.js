@@ -11,21 +11,14 @@ let LATERAL_AIR_VELOCITY = 76;
 // var punchsound = new Audio('./assets/sound/Bastien/punch.ogg');
 // var kicksound = new Audio('./assets/sound/Bastien/kick.ogg');
 
-let AIActionsDep = [
+let AIActions = [
     // FighterState.IDLE,
-    FighterState.GUARD,
-    FighterState.JUMP,
-    FighterState.FORWARDWALK,
-    FighterState.BACKWARDWALK,
-]
-let AIActionsAtk = [
     FighterState.PUNCH,
     FighterState.UPKICK,
-    FighterState.GUARD,
-    // FighterState.IDLE,
     // FighterState.JUMP,
     FighterState.FORWARDWALK,
     FighterState.BACKWARDWALK,
+    FighterState.GUARD
 ];
 
 
@@ -44,7 +37,6 @@ export class FighterDemo {
         this.lastHitTime = 0;
         this.hitCooldown = 400; 
         this.lastAIUpdateTime = 0;
-        this.speed = 100;
 
         this.frames = new Map();
         this.animationFrame = 0;
@@ -115,44 +107,20 @@ export class FighterDemo {
     }
 
     chooseRandomAction() {
-        const distanceToOpponent = Math.abs(this.position.x - this.opponent.position.x);
-    
-        // Si les personnages sont suffisamment éloignés, continuer à avancer
-        if (distanceToOpponent >= 40) { 
-            console.log("opponent hors portée");
-            return FighterState.FORWARDWALK;
-        } else { 
-            console.log("opponent à bout portant");
-            return this.chooseAttackAction();
-        }
+        let randomIndex = Math.floor(Math.random() * AIActions.length);
+        return AIActions[randomIndex];
     }
-    chooseMovementAction() {
-        // Sélectionnez une action de déplacement appropriée
-        let randomIndex = Math.floor(Math.random() * AIActionsDep.length);
-        return AIActionsDep[randomIndex];
-    }
-    chooseAttackAction() {
-        // Sélectionnez une action d'attaque appropriée
-        let randomIndex = Math.floor(Math.random() * AIActionsAtk.length);
-        return AIActionsAtk[randomIndex];
-    }
-    
-
-    lerp(start, end, t) {
-        return start * (1 - t) + end * t;
-    }
-    
 
     updateAI(time) {
-        if (time.passed - this.lastAIUpdateTime >= 500) { 
-            let action = this.chooseRandomAction();  
-            if (this.currentState !== FighterState.FORWARDWALK || action !== FighterState.FORWARDWALK) {
-                this.changeState(action);
+        if (time.passed - this.lastAIUpdateTime >= 500) { // 5 secondes = 5000 millisecondes
+            let action = this.chooseRandomAction();            
+            this.changeState(action);
+            if (action == AIActions.jump){
+
             }
-            this.lastAIUpdateTime = time.passed;
+            this.lastAIUpdateTime = time.passed; // Mise à jour du temps de la dernière mise à jour de l'IA
         }
     }
-    
 
     isAnimationCompleted = () => this.animations[this.currentState][this.animationFrame][1] === FrameDelay.TRANSITION;
 
@@ -310,14 +278,18 @@ export class FighterDemo {
 
 
     handleWalkForwadeState() {
-        // Si l'IA est déjà en train de marcher vers l'avant et qu'il n'y a pas de collision, continuez
-        if (!this.hasCollideWithOpponent() && control.isForward(this.playerId, this.direction)) {
-            this.velocity.x = this.speed; // Ajustez la vitesse ici si nécessaire
-        } else {
-            this.changeState(FighterState.IDLE);
+        if(!control.isForward(this.playerId, this.direction)) this.changeState(FighterState.IDLE);
+        if(control.isDown(this.playerId)) this.changeState(FighterState.GUARD);
+        if(control.isUp(this.playerId)) this.changeState(FighterState.JUMP);
+
+        if (control.isPunch(this.playerId, Control.PUNCH)) {
+            // Just punch
+            this.changeState(FighterState.PUNCH);
+        } else if (control.isUpKick(this.playerId, Control.UPKICK)) {
+            // Just upkick
+            this.changeState(FighterState.UPKICK);
         }
-    }
-    
+    }   
 
 
     handleWalkBackwardState() {
@@ -519,23 +491,6 @@ export class FighterDemo {
         }
     }
     
-    calculateTargetPosition() {
-        // Définir une distance de déplacement standard pour un pas
-        let STEP_DISTANCE = 10;
-    
-        // Calculer la position cible en fonction de l'état actuel
-        switch (this.currentState) {
-            case FighterState.FORWARDWALK:
-                // Avancer
-                return this.position.x + (this.direction === FighterDirection.RIGHT ? STEP_DISTANCE : -STEP_DISTANCE);
-            case FighterState.BACKWARDWALK:
-                // Reculer
-                return this.position.x + (this.direction === FighterDirection.RIGHT ? -STEP_DISTANCE : STEP_DISTANCE);
-            default:
-                // Pour les autres états, rester sur place
-                return this.position.x;
-        }
-    }
 
     drawDebugBox(ctx, dimesions, baseColor){
         if(!Array.isArray(dimesions)) return;
@@ -596,15 +551,15 @@ export class FighterDemo {
         }
     }
     
-
     
     update(time, ctx) {   
-        let targetX = this.calculateTargetPosition();
-        // Mettez à jour la position x en utilisant lerp pour un mouvement fluide
-        this.position.x = this.lerp(this.position.x, targetX, time.delta * this.speed);
+        // Mise à jour de la position en fonction de la vélocité et de la direction
+        this.position.x += (this.velocity.x * this.direction) * time.delta;
+        this.position.y += this.velocity.y * time.delta;
+    
         // Mise à jour de la direction basée sur la position de l'opposant
         this.direction = this.getDirection();
-
+    
         // Mise à jour de l'état actuel
         switch (this.currentState) {
             case FighterState.ENTRY:

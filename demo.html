@@ -25,7 +25,10 @@
         </style>
         <script type="module" src="./Js/indexDemo.js"></script>        
     </head>
-    <body>        
+    <body>
+		<audio autoplay loop id="music" onloadedmetadata="this.play()">
+			<source src='./assets/sound/main_menu/Find_Your_Own_Way.mp3' type="audio/mp3">
+		</audio>        
         <main>
             <canvas width="384" height="224"></canvas>
         </main>
@@ -36,9 +39,7 @@
         <img src=./assets/mehdi_fei_long/mehdi.png alt="mehdi"  />
         <img src=./assets/misc.png alt="misc" />
         
-        <audio autoplay loop id="music">
-            <source src='./assets/sound/main_menu/Find_Your_Own_Way.mp3' type="audio/mpeg">
-        </audio>
+
         <link rel="shortcut icon" href="">
     </body>
     <script>document.getElementById("music").volume = 0.03;</script>

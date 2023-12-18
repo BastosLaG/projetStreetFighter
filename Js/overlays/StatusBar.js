@@ -50,6 +50,7 @@ export class StatusBar {
         this.name = gameState.fighters.map (({id}) => 'tag-${toLowerCase()}');
     }
 
+		
     drawFrame(ctx, frame, x, y, direction = 1) {
         const [sourceX, sourceY, sourceWidth, sourceHeight] = this.frames.get(frame)
         ctx.scale(direction, 1);
@@ -73,12 +74,29 @@ export class StatusBar {
         }
     }
 
-    updateHealthBars(time){
-        for (let index in this.healthBars){
-            if(this.healthBars[index].hitPoints <= gameState.fighters[index].hitPoints) continue;
-            this.healthBars[index].hitPoints = Math.max(0, this.healthBars[index].hitPoints - 2);
-        }
-    }
+	playKO(){
+		let video = document.getElementById('KO');
+		video.style.display = 'block'; // Afficher la vidéo
+		video.play();
+		video.onended = function() {
+			window.location.href = 'index.html';
+		};
+	}
+
+	updateHealthBars(time){
+		let playerKOed = false;
+		for (let index in this.healthBars){
+			if(this.healthBars[index].hitPoints <= gameState.fighters[index].hitPoints) continue;
+				this.healthBars[index].hitPoints = Math.max(0, this.healthBars[index].hitPoints - 2);
+			if(this.healthBars[index].hitPoints <= 0) {
+				playerKOed = true;
+			}
+		}
+	
+		if(playerKOed){
+			this.playKO();
+		}
+	}
 
     update(time){
         this.updateTime(time);
