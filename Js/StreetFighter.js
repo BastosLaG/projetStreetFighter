@@ -8,6 +8,12 @@ import { registerKeyboardEvents } from './fighters/InputHandler.js';
 import { StatusBar } from './overlays/StatusBar.js';
 import { Camera } from './camera.js';
 
+let stage = [
+    "./assets/Background.jpg",
+    "./assets/metro_bg.jpg",
+    "./assets/bocal.jpg",
+]
+
 export class StreetFighterGame { 
     constructor() {
         this.ctx = this.getContext();
@@ -22,7 +28,7 @@ export class StreetFighterGame {
         this.camera = new Camera(STAGE_MID_POINT + STAGE_PADDING - (this.ctx.canvas.width / 2), 16, this.fighters);
 
         this.objets = [
-            new Stage("./assets/Background.jpg"),
+            new Stage(stage[Math.floor(Math.random() * 3)]),
             ...this.fighters,
             new FpsCounter(),
             new StatusBar(this.fighters),
