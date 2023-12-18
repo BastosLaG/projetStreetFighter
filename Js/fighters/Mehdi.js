@@ -19,7 +19,6 @@ export class Mehdi extends Fighter {
             jump: -350,
         }
         this.gravity = 1000;
-
     
         let entry = [
             [83, 9, 34, 67],//1

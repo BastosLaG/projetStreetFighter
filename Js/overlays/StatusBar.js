@@ -81,6 +81,7 @@ export class StatusBar {
 		video.onended = function() {
 			window.location.href = 'index.html';
 		};
+        
 	}
 
 	updateHealthBars(time){
