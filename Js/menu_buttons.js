@@ -39,6 +39,15 @@ document.getElementById('startButton').addEventListener('click', function () {
     }, 550); // Retarder de 300 millisecondes (ajustez selon vos besoins)
 });
 
+//////*  Demo button   *//////
+document.getElementById('DemoButton').addEventListener('click', function () {
+    click.play(); // Jouer l'effet sonore
+    setTimeout(function() {
+        window.location.assign('demo.html');
+    }, 550); // Retarder de 300 millisecondes (ajustez selon vos besoins)
+});
+
+
 //////*  Settings button   *//////
 document.getElementById('settingButton').addEventListener('click', function () {
     click.play(); // Jouer l'effet sonore

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Univ-Fighter</title>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                overflow: hidden; /* Optional: Prevent scroll bars */
+                background-color: black;
+            }
+            canvas {
+                display: block;
+                width: 100vw;
+                height: 100vh;
+                object-fit: contain;
+                image-rendering: crisp-edges;
+                image-rendering: pixelated;
+            }
+            
+            img {
+                display: none;
+            }  
+        </style>
+        <script type="module" src="./Js/indexDemo.js"></script>        
+    </head>
+    <body>        
+        <main>
+            <canvas width="384" height="224"></canvas>
+        </main>
+        <!-- <img src="./assets/stage_metro.png" alt="background" /> -->
+        <img src="./assets/Background.jpg" alt="Background" />
+        <img src="./assets/stage_up8.png" alt="background" />
+        <img src=./assets/bastien_akuma/Bastien.png alt="bastien"  />
+        <img src=./assets/mehdi_fei_long/mehdi.png alt="mehdi"  />
+        <img src=./assets/misc.png alt="misc" />
+        
+        <audio autoplay loop id="music">
+            <source src='./assets/sound/main_menu/Find_Your_Own_Way.mp3' type="audio/mpeg">
+        </audio>
+        <link rel="shortcut icon" href="">
+    </body>
+    <script>document.getElementById("music").volume = 0.03;</script>
+</html>
