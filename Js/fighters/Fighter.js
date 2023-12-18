@@ -465,8 +465,7 @@ export class Fighter {
             this.damageDealt = true;
             if (this.opponent.currentState === FighterState.GUARD) {
                 // Le coup est bloqué
-                console.log(`${gameState.fighters[this.playerId].id} a bloqué le coup de ${gameState.fighters[this.opponent.playerId].id}`);
-                // Vous pouvez ajouter ici des effets visuels ou sonores pour indiquer que le coup a été bloqué
+                console.log(`${gameState.fighters[this.opponent.playerId].id} a bloqué le coup de ${gameState.fighters[this.playerId].id}`);
             } else {
                 // Le coup touche normalement
                 let hurtIndex = this.opponent.boxes.hurt.indexOf(hurt);
@@ -476,8 +475,7 @@ export class Fighter {
                 gameState.fighters[this.opponent.playerId].score += FighterAttackBaseData[strength].score;
                 gameState.fighters[this.playerId].hitPoints -= FighterAttackBaseData[strength].damage;
 
-
-                console.log(`${gameState.fighters[this.opponent.playerId].id} a frappé ${gameState.fighters[this.playerId].id} au ${hurtName[hurtIndex]}`);
+                console.log(`${gameState.fighters[this.playerId].id} a frappé ${gameState.fighters[this.opponent.playerId].id} au ${hurtName[hurtIndex]}`);
                 this.lastHitTime = time.passed; 
             }
         }

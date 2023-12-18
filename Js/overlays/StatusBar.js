@@ -74,34 +74,41 @@ export class StatusBar {
         }
     }
 
-	playKO(){
-		let video = document.getElementById('KO');
-		video.style.display = 'block';
-		video.play();
-		video.onended = function() {
-			window.location.href = 'index.html';
-		};
-        
-	}
+	playKO(winner) {
+        let video = document.getElementById(`KO-${winner}`);
+        video.style.display = 'block';
+        video.play();
+        video.onended = function () {
+            console.log('Video ended. Redirecting to index.html');
+            window.location.href = 'index.html';
+            video.onload();
+        };
+    }
+    
+    
+    
 
-	updateHealthBars(time){
+	updateHealthBars(){
 		let playerKOed = false;
+        let winner; 
 		for (let index in this.healthBars){
 			if(this.healthBars[index].hitPoints <= gameState.fighters[index].hitPoints) continue;
 				this.healthBars[index].hitPoints = Math.max(0, this.healthBars[index].hitPoints - 2);
 			if(this.healthBars[index].hitPoints <= 0) {
-				playerKOed = true;
+                console.log(index);
+                winner = index
+                playerKOed = true;
 			}
 		}
 	
 		if(playerKOed){
-			this.playKO();
+			this.playKO(winner);
 		}
 	}
-
+ 
     update(time){
         this.updateTime(time);
-        this.updateHealthBars(time);
+        this.updateHealthBars();
     }
 
     drawHealthBars(ctx){
